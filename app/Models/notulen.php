@@ -18,7 +18,10 @@ class notulen extends Model
     {
         return $this->belongsTo(user::class);
     }
-
+    public function user_akses()
+    {
+        return $this->hasMany(user_akses::class);
+    }
     public function scopeFilter($query, array $filters)
     {
         $query->when($filters['search'] ?? false, function($query, $search) {

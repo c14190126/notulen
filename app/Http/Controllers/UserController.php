@@ -15,6 +15,21 @@ class UserController extends Controller
             "title" => "Add Klien"
         ]);
     }
+    
+    public function indexdaftar()
+    {
+        if(auth()->check() && auth()->user()->is_super_admin)
+        {
+            return view('User.DaftarUser', [
+                "title" => "Daftar User",
+                "daftar_user" => User::all()
+            ]);
+        }
+        else
+        {
+            abort(403);
+        }
+    }
     public function store(Request $request)
     {
             $validatedData = $request->validate([
@@ -55,5 +70,12 @@ class UserController extends Controller
         
         $request->session()->flash('success','Berhasil Mengganti Password');
         return redirect('/login');
+    }
+
+    public function destroy(user $user)
+    {
+        User::destroy($user->id);
+        
+        return redirect('/daftar-user')->with('success', 'User Berhasil dihapus!');
     }
 }

@@ -43,4 +43,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(notulen::class);
     }
+
+    public function user_akses()
+    {
+        return $this->hasMany(user_akses::class);
+    }
 }

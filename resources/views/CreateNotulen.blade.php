@@ -22,10 +22,56 @@
                     @endif
                     <form action="{{ url('/create-notulen') }}" method="post" enctype="multipart/form-data">
                         @csrf
-                        <div class="custom-control custom-switch">
+                        <div class="form-group custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input" id="customSwitch1" name="private">
                             <label class="custom-control-label" for="customSwitch1">Private</label>
-                          </div>
+                        </div>
+                        <div class="form-group" id="hak_akses">
+                            {{-- <label for="text" style="color: black; font-weight: bold;">User</label>
+                            <div style="overflow-y: scroll; height: 50px;" id="isi">
+                            </div> --}}
+                        </div>
+                        <script>
+                            $('#customSwitch1').change(function () {
+                                if ($('#customSwitch1').is(':checked') == true) {
+                                    var customSwitch1 = true;
+                                }
+                                else {
+                                    var customSwitch1 = false;    
+                                }
+                                // alert(customSwitch1);
+                                $.ajax({
+                                    url: "{{url('/get-user')}}",
+                                    type: 'POST',
+                                    data: {
+                                        customSwitch1:customSwitch1,
+                                        _token:'{{ csrf_token() }}'
+                                    },
+                                    dataType: 'json',
+                                    success: function (result) {
+                                        if(customSwitch1 == false) {
+                                            $('#hak_akses').html('');
+                                        }
+                                        else {
+                                            $('#hak_akses').append('<label for="text" style="color: black; font-weight: bold;">User</label>\
+                                                                    <div style="overflow-y: scroll; height: 50px; width:100%" id="isi">');
+                                            $.each(result.user, function (key, value) {
+                                                if(value.is_super_admin == 1) {
+                                                    $('#isi').append('<div class="col-sm-4"><label><input type="checkbox" name="akses_user[]" value="'+value.id+'" checked onclick="return false;">'+value.name+'</label></div>');
+                                                }
+                                                else if (value.id == {{ auth()->user()->id }}) {
+                                                    $('#isi').append('<div class="col-sm-4"><label><input type="checkbox" name="akses_user[]" value="'+value.id+'" checked onclick="return false;">'+value.name+'</label></div>');
+                                                }
+                                                else {
+                                                    $('#isi').append('<div class="col-sm-4"><label><input type="checkbox" name="akses_user[]" value="'+value.id+'">'+value.name+'</label></div>');
+                                                }
+                                            })
+                                            $('#hak_akses').append('</div>');
+                                        }
+                                    }
+                                });
+                            });
+                        </script>
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-4">
@@ -364,5 +410,6 @@
                 });
             });
         </script>
+        
 </body>
 </html>

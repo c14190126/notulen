@@ -9,7 +9,7 @@
                     <div class="iq-header-title">
                         <h4 class="card-title">Edit Notulen</h4>
                     </div>
-                    @can('superadmin')
+                    @auth
                       
                     <hr style="height: 10px;">
                     <div class="iq-card-body">
@@ -80,43 +80,39 @@
                                     </div>
                                 </div>
                             </div>
-                            @auth
-                                <div class="form-group">
-                                    <label for="text" style="color: black; font-weight: bold;">Revisi Meeting</label>
-                                    @if($notulen->jumlah_revisi<3)
-                                    <input id="revisi_notulen" type="hidden" name="revisi_notulen" value="{{ old('revisi_notulen', $notulen->revisi_notulen) }}">
-                                    <trix-editor id="revisi" input="revisi_notulen" value="{{ old('revisi_notulen', $notulen->revisi_notulen) }}"></trix-editor>
-                                    @else
-                                    <p>{!! $notulen->revisi_notulen !!}</p>
-                                    @endif
-                                </div>
-                                <div class="form-group">
-                                    @if($notulen->jumlah_revisi<3)
-                                    <input id="edited_by" type="hidden" name="edited_by" value="{{ auth()->user()->id }}">
-                                    @else
-                                    <p>{!! $notulen->revisi_notulen !!}</p>
-                                    @endif
-                                </div>
-                            @else
+                            @isset($notulen->edited_by)
                             <div class="form-group">
-                                @isset($notulen->revisi_notulen)
-                                    <label for="text" style="color: black; font-weight: bold;">Revisi Meeting</label>
-                                    <p>{!! $notulen->revisi_notulen !!}</p>
-                                @endisset
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label for="text" style="color: black; font-weight: bold;">Edited By</label>
+                                        <input class="form-control" readonly type="text" value="{{ $edited->name }}">
+                                    </div>
+                                </div>
                             </div>
-                            @endauth
+                            @endisset
+                            <div class="form-group">
+                                <label for="text" style="color: black; font-weight: bold;">Revisi Meeting</label>
+                                @if($notulen->jumlah_revisi<3)
+                                <input id="edited_by" type="hidden" name="edited_by" value="{{ auth()->user()->id }}">
+                                <input id="revisi_notulen" type="hidden" name="revisi_notulen" value="{{ old('revisi_notulen', $notulen->revisi_notulen) }}">
+                                <trix-editor id="revisi" input="revisi_notulen" value="{{ old('revisi_notulen', $notulen->revisi_notulen) }}"></trix-editor>
+                                @else
+                                <p>{!! $notulen->revisi_notulen !!}</p>
+                                @endif
+                            </div>
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <label for="text" style="color: black; font-weight: bold;">Tanda Tangan Klien</label>
-                                        <div id="signature-pad" class="jay-signature-pad" >
+                                        <div id="signature-pad" class="jay-signature-pad">
                                             <div class="jay-signature-pad--body">
-                                                <canvas id="jay-signature-pad" width=300 height=200 style="margin: 0px; padding: 0px; border: none; height: 200px; width: 300px; touch-action: none; background-color: rgb(247, 248, 248);"></canvas>
+                                                <canvas id="jay-signature-pad-2" width=300 height=200 style="margin: 0px; padding: 0px; border: none; height: 200px; width: 300px; touch-action: none; background-color: rgb(247, 248, 248);"></canvas>
                                             </div>
                                             <div class="signature-pad--footer txt-center">
                                                 <div class="signature-pad--actions txt-center">
                                                     <div>
                                                         <button type="button" class="btn btn-danger" data-action="clear">Clear</button>
+                                                        <button id="tombol" type="button" class="btn btn-success">Save</button>
                                                     </div><br/>
                                                 </div>
                                             </div>
@@ -127,135 +123,6 @@
                                         <br><img src="{{ $notulen->tanda_tangan_deus }}" style="height: 70%"/>
                                     </div>
                                 </div>
-                                <button id="tombol" type="button" class="btn btn-success">Save</button>
-
-                            </div>
-
-                            <div class="form-group" id="data_url">
-                                <input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan"  autofocus value="{{ old('tanda_tangan') }}"/>
-                            </div>
-                            {{-- <br><button type="submit" class="btn" style="background-color: #FECF5B; color: black;">Submit</button> --}}
-                        </form>
-                    </div>
-                    @elsecan('admin')
-                    <hr style="height: 10px;">
-                    <div class="iq-card-body">
-                        @if(session()->has('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        @endif
-                        <form action="{{ url('/edit-notulen/'.$notulen->id) }}" method="post" enctype="multipart/form-data">
-                            @method('put')
-                            @csrf
-                            <button onclick="window.location.href='{{ url('/') }}'" type="button" class="btn btn-success">
-                                Back
-                            </button>
-                            <br><br>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <label for="text" style="color: black; font-weight: bold;">Creator</label>
-                                        <input readonly="readonly" type="text" class="form-control" id="name" value="{{ $notulen->user->name }}"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <label style="color: black; font-weight: bold;" for="cabang">Nama Klien</label><br>
-                                        <input readonly="readonly" type="text" class="form-control" id="nama_klien" value="{{ $notulen->klien->nama_klien }}"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <label for="text" style="color: black; font-weight: bold;">Tanggal Meeting</label>
-                                        <input readonly="readonly" type="date" class="form-control" id="tanggal" value="{{ $notulen->tanggal }}"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-2">
-                                        <label for="text" style="color: black; font-weight: bold;">Jam Mulai</label>
-                                        <input readonly="readonly" type="time" class="form-control" id="jam_mulai" value="{{ $notulen->jam_mulai }}"/>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <label for="text" style="color: black; font-weight: bold;">Jam Selesai</label>
-                                        <input readonly="readonly" type="time" class="form-control" id="jam_selesai" value="{{ $notulen->jam_selesai }}"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                    <label for="text" style="color: black; font-weight: bold;">Judul Meeting</label>
-                                    <input readonly="readonly" type="text" class="form-control" id="judul_meeting" value="{{ $notulen->judul_meeting }}"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <label for="text" style="color: black; font-weight: bold;">Isi Meeting</label>
-                                        <p>{!! $notulen->isi_notulen !!}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            @auth
-                                <div class="form-group">
-                                    <label for="text" style="color: black; font-weight: bold;">Revisi Meeting</label>
-                                    @if($notulen->jumlah_revisi<3)
-                                    <input id="revisi_notulen" type="hidden" name="revisi_notulen" value="{{ old('revisi_notulen', $notulen->revisi_notulen) }}">
-                                    <trix-editor id="revisi" input="revisi_notulen" value="{{ old('revisi_notulen', $notulen->revisi_notulen) }}"></trix-editor>
-                                    @else
-                                    <p>{!! $notulen->revisi_notulen !!}</p>
-                                    @endif
-                                </div>
-                                <div class="form-group">
-                                    @if($notulen->jumlah_revisi<3)
-                                    <input id="edited_by" type="hidden" name="edited_by" value="{{ auth()->user()->id }}">
-                                    @else
-                                    <p>{!! $notulen->revisi_notulen !!}</p>
-                                    @endif
-                                </div>
-                            @else
-                            <div class="form-group">
-                                @isset($notulen->revisi_notulen)
-                                    <label for="text" style="color: black; font-weight: bold;">Revisi Meeting</label>
-                                    <p>{!! $notulen->revisi_notulen !!}</p>
-                                @endisset
-                            </div>
-                            @endauth
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <label for="text" style="color: black; font-weight: bold;">Tanda Tangan Klien</label>
-                                        <div id="signature-pad" class="jay-signature-pad" >
-                                            <div class="jay-signature-pad--body">
-                                                <canvas id="jay-signature-pad" width=300 height=200 style="margin: 0px; padding: 0px; border: none; height: 200px; width: 300px; touch-action: none; background-color: rgb(247, 248, 248);"></canvas>
-                                            </div>
-                                            <div class="signature-pad--footer txt-center">
-                                                <div class="signature-pad--actions txt-center">
-                                                    <div>
-                                                        <button type="button" class="btn btn-danger" data-action="clear">Clear</button>
-                                                    </div><br/>
-                                                </div>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label for="text" style="color: black; font-weight: bold;">Tanda Tangan Deus</label>
-                                        <br><img src="{{ $notulen->tanda_tangan_deus }}" style="height: 70%"/>
-                                    </div>
-                                </div>
-                                <button id="tombol" type="button" class="btn btn-success">Save</button>
-
                             </div>
 
                             <div class="form-group" id="data_url">
@@ -265,7 +132,7 @@
                         </form>
                     </div>
                     @else
-                    @isset($notulen->tanda_tangan) 
+                        @isset($notulen->tanda_tangan) 
                         <div class="form-group">
                             <br>
                             <label style="font-size: 130px">Sudah Tidak Bisa Di Edit</label>
@@ -314,6 +181,12 @@
                                     </div>
                                     <div class="form-group">
                                         @isset($notulen->revisi_notulen)
+                                            <label for="text" style="color: black; font-weight: bold;">Edited By</label>
+                                            <p>{!! $edited->name !!}</p>
+                                        @endisset
+                                    </div>
+                                    <div class="form-group">
+                                        @isset($notulen->revisi_notulen)
                                             <label for="text" style="color: black; font-weight: bold;">Revisi Meeting</label>
                                             <p>{!! $notulen->revisi_notulen !!}</p>
                                         @endisset
@@ -322,14 +195,15 @@
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <label for="text" style="color: black; font-weight: bold;">Tanda Tangan Klien</label>
-                                                <div id="signature-pad" class="jay-signature-pad" >
+                                                <div id="signature-pad" class="jay-signature-pad">
                                                     <div class="jay-signature-pad--body">
-                                                        <canvas id="jay-signature-pad" width=300 height=200 style="margin: 0px; padding: 0px; border: none; height: 200px; width: 300px; touch-action: none; background-color: rgb(247, 248, 248);"></canvas>
-                                                    </div>
+                                                        <canvas id="jay-signature-pad-2" width=300 height=200 style="margin: 0px; padding: 0px; border: none; height: 200px; width: 300px; touch-action: none; background-color: rgb(247, 248, 248);"></canvas>
+                                                        </div>
                                                     <div class="signature-pad--footer txt-center">
                                                         <div class="signature-pad--actions txt-center">
                                                             <div>
                                                                 <button type="button" class="btn btn-danger" data-action="clear">Clear</button>
+                                                                <button id="tombol" type="button" class="btn btn-success">Save</button>
                                                             </div><br/>
                                                         </div>
                                                     </div>
@@ -340,8 +214,6 @@
                                                 <br><img src="{{ $notulen->tanda_tangan_deus }}" style="height: 70%"/>
                                             </div>
                                         </div>
-                                        <button id="tombol" type="button" class="btn btn-success">Save</button>
-
                                     </div>
                         
                                     <div class="form-group" id="data_url">
@@ -351,7 +223,7 @@
                                 </form>
                             </div>
                         @endisset
-                    @endcan
+                    @endauth
                 {{-- </div> --}}
             </div>
         </div>

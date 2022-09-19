@@ -26,6 +26,9 @@
             <li class="nav-item {{ ($title === "Add User") ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('/add-user') }}">Add User</a>
             </li>
+            <li class="nav-item {{ ($title === "Daftar User") ? 'active' : '' }}">
+                <a class="nav-link" href="{{ url('/daftar-user') }}">Daftar User</a>
+            </li>
             @endcan
             <br>
             <form action="{{ url('/logout') }}" method="post">

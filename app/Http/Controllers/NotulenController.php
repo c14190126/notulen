@@ -154,7 +154,7 @@ class NotulenController extends Controller
     public function show($id)
     {
         $notulen = notulen::where('id', $id)->first();
-        if (Auth::user()) {
+        if (Auth::guard('user')->check()) {
             if ($notulen->private == 0)
             {
                 return view('SingleNotulen.SingleNotulen', [
@@ -201,7 +201,7 @@ class NotulenController extends Controller
      */
     public function edit(notulen $notulen)
     {
-        if (Auth::user())
+        if (Auth::guard("user")->check())
         {
             if ($notulen->private == 0)
             {
@@ -237,15 +237,22 @@ class NotulenController extends Controller
         }
         else
         {
-            return view('EditNotulen', [
-                "title" => "Edit Notulen",
-                "notulen" => $notulen,
-                "edited" => DB::table('users as u')
-                            ->join('notulens as n', 'u.id', '=', 'n.edited_by')
-                            ->where('n.id',$notulen->id)
-                            ->select('u.name')
-                            ->first()
-            ]);
+            $klien_akses = notulen::where('id', $notulen->id)->where('klien_id', Auth::id())->first();
+            // dd($klien_akses);
+            if ($klien_akses != null){
+                return view('EditNotulen', [
+                    "title" => "Edit Notulen",
+                    "notulen" => $notulen,
+                    "edited" => DB::table('users as u')
+                                ->join('notulens as n', 'u.id', '=', 'n.edited_by')
+                                ->where('n.id',$notulen->id)
+                                ->select('u.name')
+                                ->first()
+                ]);
+            }
+            else {
+                abort(403);
+            }
         }
     }
 
@@ -258,7 +265,6 @@ class NotulenController extends Controller
      */
     public function update(UpdatenotulenRequest $request, notulen $notulen)
     {
-        dd($request);
         // dd($notulen->jumlah_revisi+1);
         if(Auth::user())
         {

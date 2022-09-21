@@ -91,7 +91,7 @@
                                 </div>
                             </div>
                             @endisset
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="text" style="color: black; font-weight: bold;">Revisi Meeting</label>
                                 @if($notulen->jumlah_revisi<3)
                                 <input id="edited_by" type="hidden" name="edited_by" value="{{ auth()->user()->id }}">
@@ -100,7 +100,7 @@
                                 @else
                                 <p>{!! $notulen->revisi_notulen !!}</p>
                                 @endif
-                            </div>
+                            </div> --}}
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-6">
@@ -185,17 +185,20 @@
                                         <p>{!! $notulen->isi_notulen !!}</p>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                                        <label class="form-check-label" for="flexRadioDefault1">
-                                          Setuju
+                                        <input class="form-check-input" type="radio" name="exampleRadios" id="terima" value="terima" checked>
+                                        <label class="form-check-label" for="exampleRadios1">
+                                          Terima
                                         </label>
                                       </div>
                                       <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                                        <label class="form-check-label" for="flexRadioDefault1">
-                                          Tidak Setuju
+                                        <input class="form-check-input" type="radio" name="exampleRadios" id="tolak" value="tolak">
+                                        <label class="form-check-label" for="exampleRadios2">
+                                          Tolak
                                         </label>
                                       </div>
+                                      <div class="form-group" id="catatan">
+                                        
+                                    </div>
                                     <div class="form-group">
                                         @isset($notulen->revisi_notulen)
                                             <label for="text" style="color: black; font-weight: bold;">Edited By</label>
@@ -208,8 +211,11 @@
                                             <p>{!! $notulen->revisi_notulen !!}</p>
                                         @endisset
                                     </div>
+                                    <div class="form-group" id="">
+                                        
+                                    </div>
                                     <div class="form-group">
-                                        <div class="row">
+                                        <div class="row" id="tandatangan">
                                             <div class="col-sm-6">
                                                 <label for="text" style="color: black; font-weight: bold;">Tanda Tangan Klien</label>
                                                 <div id="signature-pad" class="jay-signature-pad">
@@ -232,7 +238,38 @@
                                             </div>
                                         </div>
                                     </div>
-                        
+                                    <script>
+                                        $('.form-check').click(function () {
+                                            if($('#tolak').is(':checked')==true){
+                                                var status = $('#tolak').val()
+                                                        $('#catatan').append('<label for="text" style="color: black; font-weight: bold;">Catatan</label>\
+                                                        <input id="catatan" type="hidden" name="catatan" value="{{ old('isi_notulen') }}">\
+                                                        <trix-editor input="isi_notulen"></trix-editor>')
+                                            }   
+                                            else{
+                                                $('#catatan').html('');
+                                                var status = $('#terima').val()
+                                            }           
+                                            // $.ajax({
+                                            //     url: "{{url('/get-revisi')}}",
+                                            //     type: 'POST',
+                                            //     data: {
+                                            //             status:status,
+                                            //             _token:'{{ csrf_token() }}'
+                                            //     },
+                                            //     dataType: 'json',
+                                            //     success: function (result) {
+                                            //         if(status=="terima") {
+                                                        
+                                            //         }
+                            
+                                            //         else {
+                                            //             $('#data_url').html('<input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan" required autofocus value="'+result.klien+'"/><button type="submit" class="btn" style="background-color: #FECF5B; color: black;">Submit</button>');
+                                            //         }
+                                            //     }
+                                            // });
+                                        });
+                                    </script>
                                     <div class="form-group" id="data_url">
                                         <input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan"  autofocus value="{{ old('tanda_tangan') }}"/>
                                     </div>
@@ -390,6 +427,7 @@
             //     }
             // });
         </script>
+       
 
         <script>
             $('#tombol').click(function () {
@@ -420,6 +458,7 @@
                 });
             });
         </script>
+        
         
 </body>
 </html>

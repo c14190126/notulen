@@ -28,6 +28,7 @@ Route::get('/', [NotulenController::class, 'index'])->middleware('auth:user,klie
 Route::post('/create-notulen', [NotulenController::class, 'store']);
 Route::post('/get-url', [NotulenController::class, 'getURL']);
 Route::post('/get-user', [NotulenController::class, 'getUser']);
+Route::post('/get-revisi', [NotulenController::class, 'getRevisi']);
 Route::get('/add-notulen', [NotulenController::class, 'indexAdd'])->middleware('auth:user');
 
 Route::get('/notulen/{id}', [NotulenController::class, 'show']);

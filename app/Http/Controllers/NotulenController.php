@@ -23,15 +23,28 @@ class NotulenController extends Controller
      */
     public function index()
     {
-        $user_akses = user_akses::where('akses_user', Auth::id())->get('notulen_id');
-        // $list_notulen = notulen::latest()->whereIn('id', $user_akses)->orwhere('private', 0)->get();
-        // dd($list_notulen);
+        if(Auth::guard('user')->check()) {
+            $user_akses = user_akses::where('akses_user', Auth::id())->get('notulen_id');
+            // $list_notulen = notulen::latest()->whereIn('id', $user_akses)->orwhere('private', 0)->get();
+            // dd($list_notulen);
 
-        return view('ListNotulen', [
-            "title" => "Daftar Notulen",
-            "list_notulen" => notulen::latest()->whereIn('id', $user_akses)->orwhere('private', 0)->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
-        ]);
+            return view('ListNotulen', [
+                "title" => "Daftar Notulen",
+                "list_notulen" => notulen::latest()->whereIn('id', $user_akses)->orwhere('private', 0)->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+            ]);
+        }
+        else{
+            $klien_akses = notulen::where('klien_id', Auth::id())->get('klien_id');
+            
+
+            return view('ListNotulen', [
+                "title" => "Daftar Notulen",
+                "list_notulen" => notulen::latest()->whereIn('klien_id', $klien_akses)->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+            ]);
+        }
+       
     }
+
 
     public function indexAdd()
     {
@@ -123,6 +136,14 @@ class NotulenController extends Controller
 
         return response()->json($data);
     }
+
+    public function getRevisi(StorenotulenRequest $request)
+    {
+        $data['user'] = User::all();
+
+        return response()->json($data);
+    }
+
 
     /**
      * Display the specified resource.
@@ -237,26 +258,28 @@ class NotulenController extends Controller
      */
     public function update(UpdatenotulenRequest $request, notulen $notulen)
     {
+        dd($request);
         // dd($notulen->jumlah_revisi+1);
         if(Auth::user())
         {
-            if(is_null($request->revisi_notulen)) {
+            // if(is_null($request->revisi_notulen)) {
+            //     notulen::where('id', $notulen->id)
+            //            ->update(['tanda_tangan' => $request->tanda_tangan,
+            //            'revisi_notulen' => $request->revisi_notulen,
+            //            'jumlah_revisi' => 0,
+            //            'tanggal_revisi' => NULL,
+            //            'edited_by' => NULL
+            //         ]);
+            // }
+            // else {
                 notulen::where('id', $notulen->id)
                        ->update(['tanda_tangan' => $request->tanda_tangan,
-                       'revisi_notulen' => $request->revisi_notulen,
-                       'jumlah_revisi' => 0,
-                       'tanggal_revisi' => NULL,
-                       'edited_by' => NULL
-                    ]);
-            }
-            else {
-                notulen::where('id', $notulen->id)
-                       ->update(['tanda_tangan' => $request->tanda_tangan,
-                                 'revisi_notulen' => $request->revisi_notulen,
+                                 'isi_notulen' => $request->isi_notulen,
                                  'edited_by' => $request->edited_by,
                                  'jumlah_revisi' => $notulen->jumlah_revisi+1,
                                  'tanggal_revisi' => Carbon::today()]);
-            }
+            // }
+            
         }
         else{
             notulen::where('id', $notulen->id)

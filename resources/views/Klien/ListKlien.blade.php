@@ -28,7 +28,7 @@
                                     <tr>
                                         <td>{{ $klien->id }}</td>
                                         <td>{{ $klien->nama_klien }}</td>
-                                        <td>{{ $klien->email_klien }}</td>
+                                        <td>{{ $klien->email }}</td>
                                         <td>{{ $klien->no_wa }}</td>
                                         <td>
                                             <form action="{{ url('/klien/'.$klien->id) }}" method="POST" class="d-inline">

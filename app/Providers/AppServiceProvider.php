@@ -34,10 +34,12 @@ class AppServiceProvider extends ServiceProvider
         {
             return $user->is_admin;
         });
-
+        
         Gate::define('superadmin',function(User $user)
         {
             return $user->is_super_admin;
         });
+
+       
     }
 }

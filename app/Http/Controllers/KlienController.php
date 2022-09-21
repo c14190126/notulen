@@ -49,7 +49,7 @@ class KlienController extends Controller
         // dd($request);
         $validatedData = $request->validate([
             'nama_klien' => 'required|max:255',
-            'email_klien' => 'required|max:255|unique:kliens|email:dns',
+            'email' => 'required|max:255|unique:kliens|email:dns',
             'no_wa' => 'required|unique:kliens',
             'password'=>''
         ]);

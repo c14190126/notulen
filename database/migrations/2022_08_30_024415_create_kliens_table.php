@@ -16,9 +16,10 @@ class CreateKliensTable extends Migration
         Schema::create('kliens', function (Blueprint $table) {
             $table->id();
             $table->string('nama_klien');
-            $table->string('email_klien')->unique();
+            $table->string('email')->unique();
             $table->string('no_wa')->unique();
             $table->string('password');
+            $table->rememberToken();
             $table->timestamps();
         });
     }

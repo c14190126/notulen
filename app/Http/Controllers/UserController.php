@@ -11,9 +11,16 @@ class UserController extends Controller
 {
     public function indexadd()
     {
+        if(auth()->check() && auth()->user()->is_super_admin)
+        {
         return view('User.AddUser', [
             "title" => "Add Klien"
         ]);
+    }
+    else
+    {
+        abort(403);
+    }
     }
     
     public function indexdaftar()

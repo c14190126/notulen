@@ -7,7 +7,7 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Add Klien</h4>
+                        <h4 class="card-title">Add User</h4>
                     </div>
                 </div>
                 <hr style="height: 10px;">

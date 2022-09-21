@@ -31,11 +31,15 @@ class LoginController extends Controller
             //         $request->session()->regenerate();
             //         return redirect()->intended('/');
             //     }
-
-            if(Auth::attempt($credentials)) {
-                $request->session()->regenerate();
+                // dd($request);
+            if(Auth::guard('klien')->attempt($credentials)) {
+                // $request->session()->regenerate();
                 return redirect()->intended('/');
-
+            }
+            elseif(Auth::guard('user')->attempt($credentials))
+            {
+                // $request->session()->regenerate();
+                return redirect()->intended('/');
             }
 
         return back()->with('loginError', 'Login failed');

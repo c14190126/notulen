@@ -10,12 +10,15 @@
         <br>
         <ul class="list-unstyled components mb-5">
             @auth
+            @if(Str::length(Auth::guard('user')->user())>0)
             <li class="nav-item {{ ($title === "Create Notulen") ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('/add-notulen') }}">Create Notulen</a>
             </li>
+            @endif
             <li class="nav-item {{ ($title === "Daftar Notulen") ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('/') }}">List Notulen</a>
             </li>
+            @if(Str::length(Auth::guard('user')->user())>0)
             <li class="nav-item {{ ($title === "Add Klien") ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('/add-klien') }}">Add Klien</a>
             </li>
@@ -30,6 +33,7 @@
                 <a class="nav-link" href="{{ url('/daftar-user') }}">Daftar User</a>
             </li>
             @endcan
+            @endif
             <br>
             <form action="{{ url('/logout') }}" method="post">
                 @csrf

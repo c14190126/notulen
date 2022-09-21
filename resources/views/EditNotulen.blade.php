@@ -10,7 +10,7 @@
                         <h4 class="card-title">Edit Notulen</h4>
                     </div>
                     @auth
-                      
+                    @if(Str::length(Auth::guard('user')->user())>0)
                     <hr style="height: 10px;">
                     <div class="iq-card-body">
                         @if(session()->has('success'))
@@ -137,7 +137,7 @@
                         </form>
                     </div>
                     @else
-                        @isset($notulen->tanda_tangan) 
+                    @isset($notulen->tanda_tangan) 
                         <div class="form-group">
                             <br>
                             <label style="font-size: 130px">Sudah Tidak Bisa Di Edit</label>
@@ -240,6 +240,7 @@
                                 </form>
                             </div>
                         @endisset
+                        @endif
                     @endauth
                 {{-- </div> --}}
             </div>

@@ -24,24 +24,24 @@ Route::post('/logout', [LoginController::class, 'logout']);
 Route::get('/register', [RegisterController::class, 'index'])->middleware('guest');
 Route::post('/register', [RegisterController::class, 'store']);
 
-Route::get('/', [NotulenController::class, 'index'])->middleware('auth');
+Route::get('/', [NotulenController::class, 'index'])->middleware('auth:user,klien');
 Route::post('/create-notulen', [NotulenController::class, 'store']);
 Route::post('/get-url', [NotulenController::class, 'getURL']);
 Route::post('/get-user', [NotulenController::class, 'getUser']);
-Route::get('/add-notulen', [NotulenController::class, 'indexAdd'])->middleware('auth');
+Route::get('/add-notulen', [NotulenController::class, 'indexAdd'])->middleware('auth:user');
 
 Route::get('/notulen/{id}', [NotulenController::class, 'show']);
 Route::delete('/notulen/{notulen:id}', [NotulenController::class, 'destroy']);
-Route::get('/notulen/{notulen:id}/edit', [NotulenController::class, 'edit']);
+Route::get('/notulen/{notulen:id}/edit', [NotulenController::class, 'edit'])->middleware('auth:user,klien');
 Route::put('/edit-notulen/{notulen:id}', [NotulenController::class, 'update']);
 
-Route::get('/daftar-klien', [KlienController::class, 'indexdaftar'])->middleware('auth');
-Route::get('/add-klien', [KlienController::class, 'indexadd'])->middleware('auth');
+Route::get('/daftar-klien', [KlienController::class, 'indexdaftar'])->middleware('auth:user');
+Route::get('/add-klien', [KlienController::class, 'indexadd'])->middleware('auth:user');
 Route::post('/add-klien', [KlienController::class, 'store']);
 Route::delete('/klien/{klien:id}', [KlienController::class, 'destroy']);
 
-Route::get('/add-user', [UserController::class, 'indexadd'])->middleware('auth');
-Route::get('/daftar-user', [UserController::class, 'indexdaftar'])->middleware('auth');
+Route::get('/add-user', [UserController::class, 'indexadd'])->middleware('auth:user');
+Route::get('/daftar-user', [UserController::class, 'indexdaftar'])->middleware('auth:user');
 Route::post('/add-user', [UserController::class, 'store']);
 Route::delete('/user/{user:id}', [UserController::class, 'destroy']);
 

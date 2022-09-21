@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\klien;
 use App\Http\Requests\StoreklienRequest;
 use App\Http\Requests\UpdateklienRequest;
+use Illuminate\Support\Facades\Hash;
 
 class KlienController extends Controller
 {
@@ -47,8 +48,12 @@ class KlienController extends Controller
     {
         // dd($request);
         $validatedData = $request->validate([
-            'nama_klien' => 'required|max:255|unique:kliens'
+            'nama_klien' => 'required|max:255',
+            'email_klien' => 'required|max:255|unique:kliens|email:dns',
+            'no_wa' => 'required|unique:kliens',
+            'password'=>''
         ]);
+        $validatedData['password'] = Hash::make($request->password);
 
         klien::create($validatedData);
 

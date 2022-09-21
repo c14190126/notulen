@@ -15,7 +15,10 @@ class CreateKliensTable extends Migration
     {
         Schema::create('kliens', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_klien')->unique();
+            $table->string('nama_klien');
+            $table->string('email_klien')->unique();
+            $table->string('no_wa')->unique();
+            $table->string('password');
             $table->timestamps();
         });
     }

@@ -22,6 +22,7 @@ class RegisterController extends Controller
             'email' => 'required|unique:users|email:dns',
             'password' => 'required'
         ]);
+        $validatedData['is_super_admin'] = 1;
 
         $validatedData['password'] = Hash::make($request->password);
 

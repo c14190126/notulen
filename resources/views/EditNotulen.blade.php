@@ -73,12 +73,13 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-4">
+                                @isset($notulen->tanda_tangan)
+                                <p>{!! $notulen->revisi_notulen !!}</p>                               
+                                 @else
                                         <label for="text" style="color: black; font-weight: bold;">Isi Meeting</label>
-                                        <p>{!! $notulen->isi_notulen !!}</p>
-                                    </div>
-                                </div>
+                                        <input id="isi_notulen" type="hidden" name="isi_notulen" value="{{ old('isi_notulen', $notulen->isi_notulen) }}">
+                                        <trix-editor id="isi_notulen" input="isi_notulen" value="{{ old('isi_notulen', $notulen->isi_notulen) }}"></trix-editor>
+                                @endisset
                             </div>
                             @isset($notulen->edited_by)
                             <div class="form-group">
@@ -104,6 +105,9 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <label for="text" style="color: black; font-weight: bold;">Tanda Tangan Klien</label>
+                                    @isset($notulen->tanda_tangan)
+                                    <br><img src="{{ $notulen->tanda_tangan }}" style="height: 70%"/>
+                                    @else
                                         <div id="signature-pad" class="jay-signature-pad">
                                             <div class="jay-signature-pad--body">
                                                 <canvas id="jay-signature-pad-2" width=300 height=200 style="margin: 0px; padding: 0px; border: none; height: 200px; width: 300px; touch-action: none; background-color: rgb(247, 248, 248);"></canvas>
@@ -117,6 +121,7 @@
                                                 </div>
                                             </div>
                                         </div>    
+                                        @endisset
                                     </div>
                                     <div class="col-sm-6">
                                         <label for="text" style="color: black; font-weight: bold;">Tanda Tangan Deus</label>
@@ -179,6 +184,18 @@
                                         <label for="text" style="color: black; font-weight: bold;">Isi Meeting</label>
                                         <p>{!! $notulen->isi_notulen !!}</p>
                                     </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                          Setuju
+                                        </label>
+                                      </div>
+                                      <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                          Tidak Setuju
+                                        </label>
+                                      </div>
                                     <div class="form-group">
                                         @isset($notulen->revisi_notulen)
                                             <label for="text" style="color: black; font-weight: bold;">Edited By</label>

@@ -54,7 +54,7 @@
                                         }
                                         else {
                                             $('#hak_akses').append('<label for="text" style="color: black; font-weight: bold;">User</label>\
-                                                                    <div style="overflow-y: scroll; height: 50px; width:100%" id="isi">');
+                                                                    <div style="overflow-y: scroll; height: 100px; " id="isi">');
                                             $.each(result.user, function (key, value) {
                                                 if(value.is_super_admin == 1) {
                                                     $('#isi').append('<div class="col-sm-4"><label><input type="checkbox" name="akses_user[]" value="'+value.id+'" checked onclick="return false;">'+value.name+'</label></div>');
@@ -169,7 +169,7 @@
 
                         <div class="form-group">
                             <div class="row">
-                                <div class="col-sm-6">
+                                {{-- <div class="col-sm-6">
                                     <label for="text" style="color: black; font-weight: bold;">Tanda Tangan Klien</label>
                                     <div id="signature-pad" class="jay-signature-pad" >
                                         <div class="jay-signature-pad--body">
@@ -183,7 +183,7 @@
                                             </div>
                                         </div>
                                     </div>    
-                                </div>
+                                </div> --}}
                                 <div class="col-sm-6">
                                     <label for="text" style="color: black; font-weight: bold;">Tanda Tangan Deus</label>
                                     <div id="signature-pad-2" class="jay-signature-pad">
@@ -228,77 +228,77 @@
             $(document).ready(function() {
                 $('.test').select2();
             });
-            var wrapper = document.getElementById("signature-pad");
-            var clearButton = wrapper.querySelector("[data-action=clear]");
-            var changeColorButton = wrapper.querySelector("[data-action=change-color]");
-            var savePNGButton = wrapper.querySelector("[data-action=save-png]");
-            var saveJPGButton = wrapper.querySelector("[data-action=save-jpg]");
-            var saveSVGButton = wrapper.querySelector("[data-action=save-svg]");
-            var canvas = wrapper.querySelector("canvas");
-            var signaturePad = new SignaturePad(canvas, {
-                backgroundColor: 'rgb(255, 255, 255)'
-            });
-            // Adjust canvas coordinate space taking into account pixel ratio,
-            // to make it look crisp on mobile devices.
-            // This also causes canvas to be cleared.
-            function resizeCanvas() {
-                console.log(signaturePad);
-                // When zoomed out to less than 100%, for some very strange reason,
-                // some browsers report devicePixelRatio as less than 1
-                // and only part of the canvas is cleared then.
-                var ratio =  Math.max(window.devicePixelRatio || 1, 1);
-                // This part causes the canvas to be cleared
-                canvas.width = canvas.offsetWidth * ratio;
-                canvas.height = canvas.offsetHeight * ratio;
-                canvas.getContext("2d").scale(ratio, ratio);
-                console.log(canvas.getContext("2d").scale(1, 1));
-                // This library does not listen for canvas changes, so after the canvas is automatically
-                // cleared by the browser, SignaturePad#isEmpty might still return false, even though the
-                // canvas looks empty, because the internal data of this library wasn't cleared. To make sure
-                // that the state of this library is consistent with visual state of the canvas, you
-                // have to clear it manually.
-                signaturePad.clear();
-            }
-            // On mobile devices it might make more sense to listen to orientation change,
-            // rather than window resize events.
-            window.onresize = resizeCanvas;
-            resizeCanvas();
-            function download(dataURL, filename) {
-                var blob = dataURLToBlob(dataURL);
-                var url = window.URL.createObjectURL(blob);
-                var a = document.createElement("a");
-                a.style = "display: none";
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-            }
-            // One could simply use Canvas#toBlob method instead, but it's just to show
-            // that it can be done using result of SignaturePad#toDataURL.
-            function dataURLToBlob(dataURL) {
-                var parts = dataURL.split(';base64,');
-                var contentType = parts[0].split(":")[1];
-                var raw = window.atob(parts[1]);
-                var rawLength = raw.length;
-                var uInt8Array = new Uint8Array(rawLength);
-                for (var i = 0; i < rawLength; ++i) {
-                    uInt8Array[i] = raw.charCodeAt(i);
-                }
-                return new Blob([uInt8Array], { type: contentType });
-            }
-            clearButton.addEventListener("click", function (event) {
-                signaturePad.clear();
-            });
-            // saveJPGButton.addEventListener("click", function (event) {
-            //     if (signaturePad.isEmpty()) {
-            //     alert("Please provide a signature first.");
-            //     } else {
-            //     var dataURL = signaturePad.toDataURL("image/jpeg");
-            //     console.log(dataURL);
-            //     // download(dataURL, "signature.jpg");
-            //     }
+            // var wrapper = document.getElementById("signature-pad");
+            // var clearButton = wrapper.querySelector("[data-action=clear]");
+            // var changeColorButton = wrapper.querySelector("[data-action=change-color]");
+            // var savePNGButton = wrapper.querySelector("[data-action=save-png]");
+            // var saveJPGButton = wrapper.querySelector("[data-action=save-jpg]");
+            // var saveSVGButton = wrapper.querySelector("[data-action=save-svg]");
+            // var canvas = wrapper.querySelector("canvas");
+            // var signaturePad = new SignaturePad(canvas, {
+            //     backgroundColor: 'rgb(255, 255, 255)'
             // });
+            // // Adjust canvas coordinate space taking into account pixel ratio,
+            // // to make it look crisp on mobile devices.
+            // // This also causes canvas to be cleared.
+            // function resizeCanvas() {
+            //     console.log(signaturePad);
+            //     // When zoomed out to less than 100%, for some very strange reason,
+            //     // some browsers report devicePixelRatio as less than 1
+            //     // and only part of the canvas is cleared then.
+            //     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+            //     // This part causes the canvas to be cleared
+            //     canvas.width = canvas.offsetWidth * ratio;
+            //     canvas.height = canvas.offsetHeight * ratio;
+            //     canvas.getContext("2d").scale(ratio, ratio);
+            //     console.log(canvas.getContext("2d").scale(1, 1));
+            //     // This library does not listen for canvas changes, so after the canvas is automatically
+            //     // cleared by the browser, SignaturePad#isEmpty might still return false, even though the
+            //     // canvas looks empty, because the internal data of this library wasn't cleared. To make sure
+            //     // that the state of this library is consistent with visual state of the canvas, you
+            //     // have to clear it manually.
+            //     signaturePad.clear();
+            // }
+            // // On mobile devices it might make more sense to listen to orientation change,
+            // // rather than window resize events.
+            // window.onresize = resizeCanvas;
+            // resizeCanvas();
+            // function download(dataURL, filename) {
+            //     var blob = dataURLToBlob(dataURL);
+            //     var url = window.URL.createObjectURL(blob);
+            //     var a = document.createElement("a");
+            //     a.style = "display: none";
+            //     a.href = url;
+            //     a.download = filename;
+            //     document.body.appendChild(a);
+            //     a.click();
+            //     window.URL.revokeObjectURL(url);
+            // }
+            // // One could simply use Canvas#toBlob method instead, but it's just to show
+            // // that it can be done using result of SignaturePad#toDataURL.
+            // function dataURLToBlob(dataURL) {
+            //     var parts = dataURL.split(';base64,');
+            //     var contentType = parts[0].split(":")[1];
+            //     var raw = window.atob(parts[1]);
+            //     var rawLength = raw.length;
+            //     var uInt8Array = new Uint8Array(rawLength);
+            //     for (var i = 0; i < rawLength; ++i) {
+            //         uInt8Array[i] = raw.charCodeAt(i);
+            //     }
+            //     return new Blob([uInt8Array], { type: contentType });
+            // }
+            // clearButton.addEventListener("click", function (event) {
+            //     signaturePad.clear();
+            // });
+            // // saveJPGButton.addEventListener("click", function (event) {
+            // //     if (signaturePad.isEmpty()) {
+            // //     alert("Please provide a signature first.");
+            // //     } else {
+            // //     var dataURL = signaturePad.toDataURL("image/jpeg");
+            // //     console.log(dataURL);
+            // //     // download(dataURL, "signature.jpg");
+            // //     }
+            // // });
         </script>
 
         <script>
@@ -380,8 +380,8 @@
                 else {
                     var tanda_tangan_deus = signaturePad2.toDataURL("image/jpeg");
                 }
-                var tanda_tangan = signaturePad.toDataURL("image/jpeg");
-                $("#data_url").html('');
+                // var tanda_tangan = signaturePad.toDataURL("image/jpeg");
+                // $("#data_url").html('');
                 $("#data_url_2").html('');
                 // console.log(tanda_tangan);
                 // alert(tanda_tangan);
@@ -389,18 +389,18 @@
                     url: "{{url('/get-url')}}",
                     type: 'POST',
                     data: {
-                            tanda_tangan:tanda_tangan,
+                            // tanda_tangan:tanda_tangan,
                             tanda_tangan_deus:tanda_tangan_deus,
                             _token:'{{ csrf_token() }}'
                     },
                     dataType: 'json',
                     success: function (result) {
                         // alert('BERHASIL');
-                        if(signaturePad.isEmpty()) {
-                        }
-                        else {
-                            $('#data_url').html('<input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan" required autofocus value="'+result.klien+'"/>');
-                        }
+                        // if(signaturePad.isEmpty()) {
+                        // }
+                        // else {
+                        //     $('#data_url').html('<input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan" required autofocus value="'+result.klien+'"/>');
+                        // }
                         if (signaturePad2.isEmpty()) {
                         }
                         else {

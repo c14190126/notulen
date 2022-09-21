@@ -35,6 +35,33 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label style="color: black; font-weight: bold;" for="add-klien">Email Klien</label>
+                                    <input type="email" class="form-control @error('email_klien') is-invalid @enderror" id="email_klien" name="email_klien" value="{{ old('email_klien') }}" required autofocus/>
+                                    @error('email_klien')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label style="color: black; font-weight: bold;" for="add-klien">No WA Klien</label>
+                                    <input type="number" class="form-control @error('no_wa') is-invalid @enderror" id="no_wa" name="no_wa" value="{{ old('no_wa') }}" required autofocus/>
+                                    @error('no_wa')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        
                         <button type="submit" class="btn" style="background-color: #FECF5B; color: black;">
                             Submit
                         </button>

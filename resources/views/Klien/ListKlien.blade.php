@@ -19,6 +19,8 @@
                                     <tr>
                                         <th style="width:10%;"">No.</th>
                                         <th>Nama Klien</th>
+                                        <th>Email Klien</th>
+                                        <th>No Wa Klien</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -26,6 +28,8 @@
                                     <tr>
                                         <td>{{ $klien->id }}</td>
                                         <td>{{ $klien->nama_klien }}</td>
+                                        <td>{{ $klien->email_klien }}</td>
+                                        <td>{{ $klien->no_wa }}</td>
                                         <td>
                                             <form action="{{ url('/klien/'.$klien->id) }}" method="POST" class="d-inline">
                                                 @method('delete')

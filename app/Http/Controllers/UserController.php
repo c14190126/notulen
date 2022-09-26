@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 
@@ -56,27 +57,41 @@ class UserController extends Controller
         $request->session()->flash('success','Berhasil Mendaftar');
         return redirect('/add-user');
     }
-    public function change_password()
+    public function changePassword()
     {
-        return view('User.Changepassword', [
+        return view('User.ChangePassword', [
             "title" => "Change Password"
         ]);
     }
-    public function update_password(Request $request)
+    public function updatePassword($id, Request $request)
     {
-        $email = $request->session()->pull('key', 'default');
-        $validatedData = $request->validate([
-            'password' => 'required'
+      $credentials = $request->validate([
+            'password' => 'required',
+            'email' => 'required'
         ]);
-        $password=$validatedData['password'] = Hash::make($request->password);
-        User::where('email', $email)
-        ->update(['password' => $password,
-        
+        if(Auth::guard('user')->attempt($credentials)) {
+            $validatedData = $request->validate([
+                'password_baru' => 'required'
+            ]);
+            $validatedData['password_baru'] = Hash::make($request->password_baru);
 
-     ]);
-        
-        $request->session()->flash('success','Berhasil Mengganti Password');
-        return redirect('/login');
+            User::where('id', $id)->update(['password' => $validatedData['password_baru']]);
+    
+            $request->session()->flash('success','Password Berhasil Diganti');
+
+            Auth::logout();
+
+            $request->session()->invalidate();
+            
+            $request->session()->regenerateToken();
+
+            return redirect('/login');
+        }
+        else
+        {
+            $request->session()->flash('fail','Password Tidak Berhasil Diganti');
+            return redirect('/change-password');
+        }
     }
 
     public function destroy(user $user)

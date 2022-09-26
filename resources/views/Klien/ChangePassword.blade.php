@@ -27,12 +27,12 @@
                             </button>
                         </div>
                     @endif
-                    <form action="{{ url('/change-password/'.Auth::guard('user')->id()) }}" method="post">
+                    <form action="{{ url('/change-password/'.Auth::guard('klien')->id()) }}" method="post">
                         @csrf
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <input type="hidden" class="form-control @error('email') is-invalid @enderror" id="email" name="email" required autofocus value="{{ Auth::guard('user')->user()->email}}"/>
+                                    <input type="hidden" class="form-control @error('email') is-invalid @enderror" id="email" name="email" required autofocus value="{{ Auth::guard('klien')->user()->email}}"/>
                                     @error('email')
                                         <div class="invalid-feedback">
                                             {{ $message }}

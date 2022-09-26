@@ -103,9 +103,16 @@
 
 <body>
     <div class="wrapper">
-        @if(session()->has('loginError'))
+        @if(session()->has('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        @elseif (session()->has('fail'))
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ session('loginError') }}
+                {{ session('fail') }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -152,6 +159,6 @@
         x.type = "password";
     }
     }
-    </script>
+</script>
 
 </html>

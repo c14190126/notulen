@@ -14,9 +14,15 @@
                 <div class="iq-card-body">
                     <form>
                         @csrf
+                        @isset ($notulen->tanda_tangan)
+                        <button onclick="window.location.href='{{ url('/list-notulen-acc') }}'" type="button" class="btn btn-success">
+                            Back
+                        </button>
+                        @else
                         <button onclick="window.location.href='{{ url('/') }}'" type="button" class="btn btn-success">
                             Back
                         </button>
+                        @endisset
                         <br><br>
                         <div class="form-group">
                             <div class="row">
@@ -73,8 +79,8 @@
                                 </div>
                             </div>
                         </div>
-                        @isset($notulen->revisi_notulen)
-                        <div class="form-group">
+                        @isset($notulen->catatan_klien)
+                        {{-- <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-4">
                                     <label for="text" style="color: black; font-weight: bold;">Edited By</label>
@@ -89,12 +95,12 @@
                                     <input readonly="readonly" type="text" class="form-control" id="tanggal_revisi" value="{{ date('d M Y', strtotime($notulen->tanggal_revisi)) }}"/>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <label for="text" style="color: black; font-weight: bold;">Revisi Meeting</label>
-                                    <p>{!! $notulen->revisi_notulen !!}</p>
+                                    <label for="text" style="color: black; font-weight: bold;">Catatan Klien</label>
+                                    <p>{!! $notulen->catatan_klien !!}</p>
                                     {{-- <input id="isi_notulen" type="text" value="{!! $notulen->isi_notulen !!}">
                                     <trix-editor input="isi_notulen"></trix-editor> --}}
                                 </div>
@@ -116,8 +122,61 @@
                             </div>
                         </div>
                     </form>
-                    <input hidden type="text" value="{{ url('/notulen/'.$notulen->id.'/edit') }}" id="link-edit">
-                    <button onclick="copyLink()" class="btn" style="background-color: #FECF5B; color: black">Copy Link Edit</button>
+                    @if ($count > 0)
+                    <div>
+                        <table class="table table-striped table-borderless">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Catatan</th>
+                                    <th>Penulis</th>
+                                </tr>
+                            </thead>
+                            @foreach ($catatan as $c)
+                                <tr>
+                                    <td>{{ $c->tanggal_catatan }}</td>
+                                    <td>{{ $c->isi_catatan }}</td>
+                                    <td>{{ $c->user->name }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                    @endif
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                @if(Str::length(Auth::guard('user')->user())>0)
+                                @empty($notulen->tanda_tangan)
+                                <form action="{{  url('/send-wa')  }}" method="post">
+                                    @csrf
+                                    <input hidden type="text" name="link_edit" value="{{ url('/notulen/'.$notulen->id.'/edit') }}" id="link_edit">
+                                    <input hidden type="text" name="id_notulen" value="{{ $notulen->id }}">
+                                    <button type="submit" class="btn btn-success" style="width: 160px;"> Send WhatsApp</button>
+                                </form>
+                                @endempty
+                                @endif
+                            </div>
+                            {{-- <div class="col-sm-2">
+                                @if(Str::length(Auth::guard('user')->user())>0)
+                                @empty($notulen->tanda_tangan)
+                                <form action="{{  url('/send-email')  }}" method="post">
+                                    @csrf
+                                    <input hidden type="text" name="link_edit" value="{{ url('/notulen/'.$notulen->id.'/edit') }}" id="link_edit">
+                                    <input hidden type="text" name="id_notulen" value="{{ $notulen->id }}">
+                                    <button type="submit" class="btn btn-danger" style="width: 160px;"> Send Email</button>
+                                </form>
+                                @endempty
+                                @endif
+                            </div> --}}
+                            @if(Str::length(Auth::guard('user')->user())>0)
+                            @empty($notulen->tanda_tangan) 
+                            <div class="col-sm-2">
+                                <button onclick="copyLink()" class="btn" style="background-color: #FECF5B; color: black; width: 160px;">Copy Link Edit</button>
+                            </div>
+                            @endempty
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

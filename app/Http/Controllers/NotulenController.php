@@ -6,6 +6,7 @@ use App\Models\notulen;
 use App\Models\klien;
 use App\Http\Requests\StorenotulenRequest;
 use App\Http\Requests\UpdatenotulenRequest;
+use App\Models\NotesNotulen;
 use App\Models\User;
 use App\Models\user_akses;
 use Illuminate\Http\Request;
@@ -25,12 +26,15 @@ class NotulenController extends Controller
     {
         if(Auth::guard('user')->check()) {
             $user_akses = user_akses::where('akses_user', Auth::id())->get('notulen_id');
-            // $list_notulen = notulen::latest()->whereIn('id', $user_akses)->orwhere('private', 0)->get();
             // dd($list_notulen);
+            // $last_edit = NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'), 'notulen_id', 'created_at')->get();
 
+            // dd($last_edit);
+            
             return view('ListNotulen', [
                 "title" => "Daftar Notulen",
-                "list_notulen" => notulen::latest()->whereIn('id', $user_akses)->orwhere('private', 0)->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+                "list_notulen" => notulen::latest()->whereIn('id', $user_akses)->orwhere('private', 0)->whereNull('tanda_tangan')->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+                "last_edit" => NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'),'notulen_id')->get()
             ]);
         }
         else{
@@ -39,7 +43,37 @@ class NotulenController extends Controller
 
             return view('ListNotulen', [
                 "title" => "Daftar Notulen",
-                "list_notulen" => notulen::latest()->whereIn('klien_id', $klien_akses)->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+                "list_notulen" => notulen::latest()->whereIn('klien_id', $klien_akses)->whereNull('tanda_tangan')->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+                "last_edit" => NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'),'notulen_id')->get()
+
+            ]);
+        }
+       
+    }
+    public function indexacc()
+    {
+        if(Auth::guard('user')->check()) {
+            $user_akses = user_akses::where('akses_user', Auth::id())->get('notulen_id');
+            // dd($list_notulen);
+            // $last_edit = NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'), 'notulen_id', 'created_at')->get();
+
+            // dd($last_edit);
+            
+            return view('ListNotulenAcc', [
+                "title" => "Daftar Notulen Acc",
+                "list_notulen" => notulen::latest()->whereIn('id', $user_akses)->orwhere('private', 0)->whereNotNull('tanda_tangan')->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+                "last_edit" => NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'),'notulen_id')->get()
+            ]);
+        }
+        else{
+            $klien_akses = notulen::where('klien_id', Auth::id())->get('klien_id');
+            
+
+            return view('ListNotulenAcc', [
+                "title" => "Daftar Notulen Acc",
+                "list_notulen" => notulen::latest()->whereIn('klien_id', $klien_akses)->whereNotNull('tanda_tangan')->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+                "last_edit" => NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'),'notulen_id')->get()
+
             ]);
         }
        
@@ -53,6 +87,17 @@ class NotulenController extends Controller
             "list_klien" => klien::orderBy('nama_klien')->get(),
 
         ]);
+    }
+
+    public function send_wa(Request $request)
+    {
+        $notulen = notulen::join('kliens as k', 'notulens.klien_id', '=', 'k.id')->where('notulens.id', $request->id_notulen)->select('notulens.*', 'k.no_wa', 'k.nama_klien', 'k.email')->first();
+        $tanggal = Carbon::createFromFormat('Y-m-d', $notulen->tanggal)->format('d F Y');
+        $jam_mulai = Carbon::createFromFormat('H:i:s', $notulen->jam_mulai)->format('H:i');
+        $jam_selesai = Carbon::createFromFormat('H:i:s', $notulen->jam_selesai)->format('H:i');
+        $no_wa = substr($notulen->no_wa, 1);
+        // dd($notulen->email);
+        return redirect('https://api.whatsapp.com/send?phone=62'.$no_wa.'&text=Judul%20Meeting:%20'.$notulen->judul_meeting.'%0ANama%20Klien:%20'.$notulen->nama_klien.'%0ATanggal%20Meeting:%20'.$tanggal.'%0AJam%20Mulai:%20'.$jam_mulai.'%20WIB%0AJam%20Selesai:%20'.$jam_selesai.'%20WIB%0ALink%20Notulen:%20'.$request->link_edit.'%0A%0ADefault%20Login:%0AEmail:%20'.$notulen->email.'%0APassword:%20password');
     }
 
     /**
@@ -160,6 +205,8 @@ class NotulenController extends Controller
                 return view('SingleNotulen.SingleNotulen', [
                     "title" => "Notulen",
                     "notulen" => notulen::where('id', $id)->first(),
+                    "catatan" => NotesNotulen::where('notulen_id', $id)->get(),
+                    "count" => NotesNotulen::where('notulen_id', $id)->count(),
                     "edited" => DB::table('users as u')
                                 ->join('notulens as n', 'u.id', '=', 'n.edited_by')
                                 ->where('n.id',$id)
@@ -175,6 +222,8 @@ class NotulenController extends Controller
                     return view('SingleNotulen.SingleNotulen', [
                         "title" => "Notulen",
                         "notulen" => notulen::where('id', $id)->first(),
+                        "catatan" => NotesNotulen::where('notulen_id', $id)->get(),
+                        "count" => NotesNotulen::where('notulen_id', $id)->count(),
                         "edited" => DB::table('users as u')
                                     ->join('notulens as n', 'u.id', '=', 'n.edited_by')
                                     ->where('n.id',$id)
@@ -185,6 +234,27 @@ class NotulenController extends Controller
                 else {
                     abort(403);
                 }
+            }
+        }
+        else if (Auth::guard('klien')->check()) 
+        {
+            $klien_akses = notulen::where('id', $notulen->id)->where('klien_id', Auth::guard('klien')->id())->first();
+            if ($klien_akses != null){
+                return view('SingleNotulen.SingleNotulen', [
+                    "title" => "Notulen",
+                    "notulen" => notulen::where('id', $id)->first(),
+                    "catatan" => NotesNotulen::where('notulen_id', $id)->get(),
+                    "count" => NotesNotulen::where('notulen_id', $id)->count(),
+                    "edited" => DB::table('users as u')
+                                ->join('notulens as n', 'u.id', '=', 'n.edited_by')
+                                ->where('n.id',$id)
+                                ->select('u.name')
+                                ->first()
+                ]);      
+            }
+            else
+            {
+                abort(403);
             }
         }
         else
@@ -265,35 +335,46 @@ class NotulenController extends Controller
      */
     public function update(UpdatenotulenRequest $request, notulen $notulen)
     {
+        // dd($request);
         // dd($notulen->jumlah_revisi+1);
-        if(Auth::user())
-        {
-            // if(is_null($request->revisi_notulen)) {
-            //     notulen::where('id', $notulen->id)
-            //            ->update(['tanda_tangan' => $request->tanda_tangan,
-            //            'revisi_notulen' => $request->revisi_notulen,
-            //            'jumlah_revisi' => 0,
-            //            'tanggal_revisi' => NULL,
-            //            'edited_by' => NULL
-            //         ]);
-            // }
-            // else {
+        if(Auth::guard('user')->check())
+        {;
+            // if(is_null($request->catatan)) {
                 notulen::where('id', $notulen->id)
                        ->update(['tanda_tangan' => $request->tanda_tangan,
-                                 'isi_notulen' => $request->isi_notulen,
-                                 'edited_by' => $request->edited_by,
-                                 'jumlah_revisi' => $notulen->jumlah_revisi+1,
-                                 'tanggal_revisi' => Carbon::today()]);
+                            'isi_notulen' => $request->isi_notulen,
+                             'edited_by' => Auth::id()
+                    ]);
+            // }
+            // else {
+            //     notulen::where('id', $notulen->id)
+            //            ->update(['tanda_tangan' => $request->tanda_tangan,
+            //                      'isi_notulen' => $request->isi_notulen,
+            //                      'edited_by' => $request->edited_by,
+            //                      'catatan'=>$request->catatan,
+            //                     //  'jumlah_revisi' => $notulen->jumlah_revisi+1,
+            //                     //  'tanggal_revisi' => Carbon::today()
+            //                     ]);
             // }
             
         }
-        else{
-            notulen::where('id', $notulen->id)
-                    ->update(['tanda_tangan' => $request->tanda_tangan
-            ]);
-        }
-
-        return redirect('/notulen/'.$notulen->id)->with('success', 'Notulen telah diedit!');
+        elseif(Auth::guard('klien')->check())
+        {
+            if(is_null($request->_klien)) {
+                notulen::where('id', $notulen->id)
+                       ->update(['tanda_tangan' => $request->tanda_tangan,
+                       'catatan_klien' => $request->catatan_klien,
+                    //    'tanggal_revisi' => NULL,
+                    ]);
+                  }
+                  else
+                  {
+                    notulen::where('id', $notulen->id)
+                       ->update(['tanda_tangan' => $request->tanda_tangan,
+                  ]);
+                  }
+         }
+        return redirect('/')->with('success', 'Notulen telah diedit!');
     }
 
     /**

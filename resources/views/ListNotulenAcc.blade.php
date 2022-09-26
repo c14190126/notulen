@@ -7,7 +7,7 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Daftar Notulen</h4>
+                        <h4 class="card-title">Daftar Notulen Acc</h4>
                     </div>
                 </div>
                 <hr style="height: 10px;">
@@ -39,21 +39,30 @@
                                 <th>Creator</th>
                                 <th>Nama Klien</th>
                                 <th>Judul Meeting</th>
-                                {{-- <th>Last Edited At</th> --}}
+                                <th>Last Edited At</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         @foreach ($list_notulen as $notulen)
                             <tr>
                                 <td>{{ $notulen->tanggal }}</td>
-                                <td>{{ $notulen->User->name }}</td>
+                                <td>{{ $notulen->user->name }}</td>
                                 <td>{{ $notulen->klien->nama_klien }}</td>
                                 <td>{{ $notulen->judul_meeting }}</td>
-                                {{-- @foreach ($last_edit as $le)
+                                @php
+                                    $count=0   
+                                @endphp
+                                @foreach ($last_edit as $le)
                                     @if($le->notulen_id == $notulen->id)
                                         <td>{{ $le->max }}</td>
+                                        @php
+                                            $count++
+                                        @endphp
                                     @endif
-                                @endforeach --}}
+                                @endforeach
+                                @if ($count == 0)
+                                    <td>&nbsp;</td>
+                                @endif
                                 <td>
                                     <button class="btn btn-info" onclick="window.location.href='{{ url('/notulen/'.$notulen->id) }}'">
                                         <i class="fa fa-eye"></i>

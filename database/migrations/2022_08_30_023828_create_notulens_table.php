@@ -22,9 +22,9 @@ class CreateNotulensTable extends Migration
             $table->time('jam_selesai');
             $table->string('judul_meeting');
             $table->text('isi_notulen');
-            $table->text('revisi_notulen')->nullable();
-            $table->integer('jumlah_revisi')->default(0);
-            $table->date('tanggal_revisi')->nullable();
+            $table->text('catatan_klien')->nullable();
+            // $table->integer('jumlah_revisi')->default(0);
+            // $table->date('tanggal_revisi')->nullable();
             $table->foreignId('edited_by')->nullable();
             $table->boolean('private')->default(false);
             $table->text('tanda_tangan')->nullable();

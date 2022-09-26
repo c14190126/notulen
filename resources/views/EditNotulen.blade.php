@@ -24,9 +24,15 @@
                         <form action="{{ url('/edit-notulen/'.$notulen->id) }}" method="post" enctype="multipart/form-data">
                             @method('put')
                             @csrf
+                            @isset ($notulen->tanda_tangan)
+                            <button onclick="window.location.href='{{ url('/list-notulen-acc') }}'" type="button" class="btn btn-success">
+                                Back
+                            </button>
+                            @else
                             <button onclick="window.location.href='{{ url('/') }}'" type="button" class="btn btn-success">
                                 Back
                             </button>
+                            @endisset
                             <br><br>
                             <div class="form-group">
                                 <div class="row">
@@ -72,13 +78,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                @isset($notulen->tanda_tangan)
-                                <p>{!! $notulen->revisi_notulen !!}</p>                               
-                                 @else
+                            @isset($notulen->tanda_tangan)
+                            <label for="text" style="color: black; font-weight: bold;">Isi Meeting</label>
+                            <p>{!! $notulen->isi_notulen !!}</p>                                                                       
+                                        @else
                                         <label for="text" style="color: black; font-weight: bold;">Isi Meeting</label>
                                         <input id="isi_notulen" type="hidden" name="isi_notulen" value="{{ old('isi_notulen', $notulen->isi_notulen) }}">
                                         <trix-editor id="isi_notulen" input="isi_notulen" value="{{ old('isi_notulen', $notulen->isi_notulen) }}"></trix-editor>
+                            @endisset            
+                            <div class="form-group">
+                                @isset($notulen->catatan_klien)
+                                <label for="text" style="color: black; font-weight: bold;">Catatan Klien</label>
+                                <p>{!! $notulen->catatan_klien !!}</p>                                                                       
                                 @endisset
                             </div>
                             @isset($notulen->edited_by)
@@ -129,11 +140,39 @@
                                     </div>
                                 </div>
                             </div>
-
+                                    
                             <div class="form-group" id="data_url">
                                 <input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan"  autofocus value="{{ old('tanda_tangan') }}"/>
                             </div>
                             {{-- <br><button type="submit" class="btn" style="background-color: #FECF5B; color: black;">Submit</button> --}}
+                        </form>
+                        <form action="{{ url('/notulen/'.$notulen->id.'/edit/add-catatan') }}" method="post">
+                            @csrf
+                            @isset($notulen->tanda_tangan)
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label for="text" style="color: black; font-weight: bold;">Tanggal Catatan</label>
+                                        <input type="date" class="form-control" id="tanggal_catatan" name="tanggal_catatan" value="{{ date('Y-m-d') }}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label for="text" style="color: black; font-weight: bold;">Isi Catatan</label>
+                                        <input type="text" class="form-control" id="isi_catatan" name="isi_catatan"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <button type="submit" class="btn btn-success">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                            @endisset
                         </form>
                     </div>
                     @else
@@ -199,18 +238,18 @@
                                       <div class="form-group" id="catatan">
                                         
                                     </div>
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         @isset($notulen->revisi_notulen)
                                             <label for="text" style="color: black; font-weight: bold;">Edited By</label>
                                             <p>{!! $edited->name !!}</p>
                                         @endisset
-                                    </div>
-                                    <div class="form-group">
-                                        @isset($notulen->revisi_notulen)
-                                            <label for="text" style="color: black; font-weight: bold;">Revisi Meeting</label>
-                                            <p>{!! $notulen->revisi_notulen !!}</p>
+                                    </div> --}}
+                                    {{-- <div class="form-group">
+                                        @isset($notulen->catatan_klien)
+                                            <label for="text" style="color: black; font-weight: bold;">Catatan Klien</label>
+                                            <p>{!! $notulen->catatan_klien !!}</p>
                                         @endisset
-                                    </div>
+                                    </div> --}}
                                     <div class="form-group" id="">
                                         
                                     </div>
@@ -243,12 +282,11 @@
                                             if($('#tolak').is(':checked')==true){
                                                 var status = $('#tolak').val()
                                                         $('#catatan').append('<label for="text" style="color: black; font-weight: bold;">Catatan</label>\
-                                                        <input id="catatan" type="hidden" name="catatan" value="{{ old('isi_notulen') }}">\
-                                                        <trix-editor input="isi_notulen"></trix-editor>')
+                                                        <input id="catatan_klien" type="hidden" name="catatan_klien" value="{{ old('catatan_klien') }}">\
+                                                        <trix-editor input="catatan_klien"></trix-editor>')
                                             }   
                                             else{
                                                 $('#catatan').html('');
-                                                var status = $('#terima').val()
                                             }           
                                             // $.ajax({
                                             //     url: "{{url('/get-revisi')}}",

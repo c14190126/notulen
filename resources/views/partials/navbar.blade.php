@@ -9,7 +9,6 @@
         <img src="{{ asset('/images/Logo-Deus.jpg') }}" width="200" height="100" style="object-fit: scale-down;">
         <br>
         <ul class="list-unstyled components mb-5">
-            @auth
             @if(Str::length(Auth::guard('user')->user())>0)
             <li class="nav-item {{ ($title === "Create Notulen") ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('/add-notulen') }}">Create Notulen</a>
@@ -17,6 +16,9 @@
             @endif
             <li class="nav-item {{ ($title === "Daftar Notulen") ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('/') }}">List Notulen</a>
+            </li>
+            <li class="nav-item {{ ($title === "Daftar Notulen Acc") ? 'active' : '' }}">
+                <a class="nav-link" href="{{ url('/list-notulen-acc') }}">List Notulen Acc</a>
             </li>
             @if(Str::length(Auth::guard('user')->user())>0)
             <li class="nav-item {{ ($title === "Add Klien") ? 'active' : '' }}">
@@ -34,6 +36,15 @@
             </li>
             @endcan
             @endif
+            @if(Str::length(Auth::guard('klien')->user())>0)
+            <li class="nav-item {{ ($title === "Change Password") ? 'active' : '' }}">
+                <a class="nav-link" href="{{ url('/change-password') }}">Change Password</a>
+            </li>
+            @elseif(Str::length(Auth::guard('user')->user())>0)
+            <li class="nav-item {{ ($title === "Change Password") ? 'active' : '' }}">
+                <a class="nav-link" href="{{ url('/user-change-password') }}">Change Password</a>
+            </li>
+            @endif
             <br>
             <form action="{{ url('/logout') }}" method="post">
                 @csrf
@@ -41,7 +52,6 @@
                     <i class="fa fa-lock"> Logout</i>
                 </button>
             </form>
-            @endauth
         </ul>
     </div>
 </nav>

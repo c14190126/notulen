@@ -16,11 +16,15 @@ class notulen extends Model
     }
     public function user()
     {
-        return $this->belongsTo(user::class);
+        return $this->belongsTo(User::class);
     }
     public function user_akses()
     {
         return $this->hasMany(user_akses::class);
+    }
+    public function NotesNotulen()
+    {
+        return $this->hasMany(NotesNotulen::class);
     }
     public function scopeFilter($query, array $filters)
     {

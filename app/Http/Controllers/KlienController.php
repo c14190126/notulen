@@ -6,6 +6,9 @@ use App\Models\klien;
 use App\Http\Requests\StoreklienRequest;
 use App\Http\Requests\UpdateklienRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class KlienController extends Controller
 {
@@ -26,6 +29,44 @@ class KlienController extends Controller
             "title" => "Daftar Klien",
             "list_klien" => klien::all()
         ]);
+    }
+
+    public function changePassword()
+    {
+        return view('Klien.ChangePassword', [
+            "title" => "Change Password"
+        ]);
+    }
+    
+    public function updatePassword($id, Request $request)
+    {
+        $credentials = $request->validate([
+            'password' => 'required',
+            'email' => 'required'
+        ]);
+        if(Auth::guard('klien')->attempt($credentials)) {
+            $validatedData = $request->validate([
+                'password_baru' => 'required'
+            ]);
+            $validatedData['password_baru'] = Hash::make($request->password_baru);
+
+            klien::where('id', $id)->update(['password' => $validatedData['password_baru']]);
+    
+            $request->session()->flash('success','Password Berhasil Diganti');
+
+            Auth::logout();
+
+            $request->session()->invalidate();
+            
+            $request->session()->regenerateToken();
+
+            return redirect('/login');
+        }
+        else
+        {
+            $request->session()->flash('fail','Password Tidak Berhasil Diganti');
+            return redirect('/change-password');
+        }
     }
 
     /**

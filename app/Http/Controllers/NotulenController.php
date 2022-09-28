@@ -61,17 +61,15 @@ class NotulenController extends Controller
             
             return view('ListNotulenAcc', [
                 "title" => "Daftar Notulen Acc",
-                "list_notulen" => notulen::latest()->whereIn('id', $user_akses)->orwhere('private', 0)->whereNotNull('tanda_tangan')->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+                "list_notulen" => notulen::latest()->whereNotNull('tanda_tangan')->orwhere('private', 0)->whereIn('id', $user_akses)->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
                 "last_edit" => NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'),'notulen_id')->get()
             ]);
         }
         else{
             $klien_akses = notulen::where('klien_id', Auth::id())->get('klien_id');
-            
-
             return view('ListNotulenAcc', [
                 "title" => "Daftar Notulen Acc",
-                "list_notulen" => notulen::latest()->whereIn('klien_id', $klien_akses)->whereNotNull('tanda_tangan')->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+                "list_notulen" => notulen::latest()->whereNotNull('tanda_tangan')->whereIn('klien_id', $klien_akses)->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
                 "last_edit" => NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'),'notulen_id')->get()
 
             ]);

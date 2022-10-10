@@ -21,7 +21,7 @@
                                         <th>Nama Klien</th>
                                         <th>Email Klien</th>
                                         <th>No Wa Klien</th>
-                                        <th>Action</th>
+                                        {{-- <th>Action</th> --}}
                                     </tr>
                                 </thead>
                                 @foreach ($list_klien as $klien)
@@ -30,16 +30,15 @@
                                         <td>{{ $klien->nama_klien }}</td>
                                         <td>{{ $klien->email }}</td>
                                         <td>{{ $klien->no_wa }}</td>
-                                        <td>
+                                        {{-- <td>
                                             <form action="{{ url('/klien/'.$klien->id) }}" method="POST" class="d-inline">
                                                 @method('delete')
                                                 @csrf
                                                 <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
-                                                {{-- <input type="hidden" name="id" value="{{ $notulen->id }}"/> --}}
                                             </form>
-                                        </td>
+                                        </td> --}}
                                        
                                     </tr>
                                 @endforeach

@@ -40,10 +40,6 @@
                                         <label for="text" style="color: black; font-weight: bold;">Creator</label>
                                         <input readonly="readonly" type="text" class="form-control" id="name" value="{{ $notulen->user->name }}"/>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
                                     <div class="col-sm-4">
                                         <label style="color: black; font-weight: bold;" for="cabang">Nama Klien</label><br>
                                         <input readonly="readonly" type="text" class="form-control" id="nama_klien" value="{{ $notulen->klien->nama_klien }}"/>
@@ -159,10 +155,10 @@
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-12">
                                         <label for="text" style="color: black; font-weight: bold;">Isi Catatan</label>
-                                        <input type="text" class="form-control" id="isi_catatan" name="isi_catatan"/>
-                                    </div>
+                                        <input id="isi_notulen" type="hidden" name="isi_notulen" value="{{ old('isi_notulen') }}">
+                                        <trix-editor class="trix-content input="isi_notulen"></trix-editor>                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">

@@ -7,6 +7,7 @@ use App\Models\klien;
 use App\Http\Requests\StorenotulenRequest;
 use App\Http\Requests\UpdatenotulenRequest;
 use App\Models\NotesNotulen;
+use App\Models\Perusahaan;
 use App\Models\User;
 use App\Models\user_akses;
 use Illuminate\Http\Request;
@@ -38,12 +39,12 @@ class NotulenController extends Controller
             ]);
         }
         else{
-            $klien_akses = notulen::where('klien_id', Auth::id())->get('klien_id');
+            $klien_akses = notulen::join('perusahaans', 'perusahaans.id', '=', 'notulens.perusahaan_id')->where('perusahaans.klien_id', Auth::guard('klien')->id())->get('perusahaans.id');
             
 
             return view('ListNotulen', [
                 "title" => "Daftar Notulen",
-                "list_notulen" => notulen::latest()->whereIn('klien_id', $klien_akses)->whereNull('tanda_tangan')->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+                "list_notulen" => notulen::latest()->whereIn('perusahaan_id', $klien_akses)->whereNull('tanda_tangan')->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
                 "last_edit" => NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'),'notulen_id')->get()
 
             ]);
@@ -66,10 +67,10 @@ class NotulenController extends Controller
             ]);
         }
         else{
-            $klien_akses = notulen::where('klien_id', Auth::id())->get('klien_id');
+            $klien_akses = notulen::join('perusahaans', 'perusahaans.id', '=', 'notulens.perusahaan_id')->where('perusahaans.klien_id', Auth::guard('klien')->id())->get('perusahaans.id');
             return view('ListNotulenAcc', [
                 "title" => "Daftar Notulen Acc",
-                "list_notulen" => notulen::latest()->whereNotNull('tanda_tangan')->whereIn('klien_id', $klien_akses)->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+                "list_notulen" => notulen::latest()->whereNotNull('tanda_tangan')->whereIn('perusahaan_id', $klien_akses)->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
                 "last_edit" => NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'),'notulen_id')->get()
 
             ]);
@@ -82,7 +83,7 @@ class NotulenController extends Controller
     {
         return view('CreateNotulen', [
             "title" => "Create Notulen",
-            "list_klien" => klien::orderBy('nama_klien')->get(),
+            "list_perusahaan" => Perusahaan::where('deleted',Null)->get(),
 
         ]);
     }
@@ -95,7 +96,7 @@ class NotulenController extends Controller
         $jam_selesai = Carbon::createFromFormat('H:i:s', $notulen->jam_selesai)->format('H:i');
         $no_wa = substr($notulen->no_wa, 1);
         // dd($notulen->email);
-        return redirect('https://api.whatsapp.com/send?phone=62'.$no_wa.'&text=Judul%20Meeting:%20'.$notulen->judul_meeting.'%0ANama%20Klien:%20'.$notulen->nama_klien.'%0ATanggal%20Meeting:%20'.$tanggal.'%0AJam%20Mulai:%20'.$jam_mulai.'%20WIB%0AJam%20Selesai:%20'.$jam_selesai.'%20WIB%0ALink%20Notulen:%20'.$request->link_edit.'%0A%0ADefault%20Login:%0AEmail:%20'.$notulen->email.'%0APassword:%20password');
+        return redirect('https://api.whatsapp.com/send?phone=62'.$no_wa.'&text=Judul%20Meeting:%20'.$notulen->judul_meeting.'%0ANama%20Klien:%20'.$notulen->nama_klien.'%0ATanggal%20Meeting:%20'.$tanggal.'%0AJam%20Mulai:%20'.$jam_mulai.'%20WIB%0AJam%20Selesai:%20'.$jam_selesai.'%20WIB%0ALink%20Notulen:%20'.$request->link_edit.'%0A%0ADefault%20Login:%0AEmail:%20'.$notulen->email);
     }
 
     /**
@@ -121,7 +122,7 @@ class NotulenController extends Controller
             $count_akses_user = count($request->input('akses_user'));
             $validatedData = $request->validate([
                 'user_id' => 'required',
-                'klien_id' => 'required',
+                'perusahaan_id' => 'required',
                 'tanggal' => 'required',
                 'jam_mulai' => 'required',
                 'jam_selesai' => 'required',
@@ -137,7 +138,7 @@ class NotulenController extends Controller
         {
             $validatedData = $request->validate([
                 'user_id' => 'required',
-                'klien_id' => 'required',
+                'perusahaan_id' => 'required',
                 'tanggal' => 'required',
                 'jam_mulai' => 'required',
                 'jam_selesai' => 'required',
@@ -236,7 +237,7 @@ class NotulenController extends Controller
         }
         else if (Auth::guard('klien')->check()) 
         {
-            $klien_akses = notulen::where('id', $notulen->id)->where('klien_id', Auth::guard('klien')->id())->first();
+            $klien_akses = notulen::where('notulens.id', $notulen->id)->join('perusahaans', 'perusahaans.id', '=', 'notulens.perusahaan_id')->where('perusahaans.klien_id', Auth::guard('klien')->id())->first();
             if ($klien_akses != null){
                 return view('SingleNotulen.SingleNotulen', [
                     "title" => "Notulen",
@@ -305,7 +306,7 @@ class NotulenController extends Controller
         }
         else
         {
-            $klien_akses = notulen::where('id', $notulen->id)->where('klien_id', Auth::id())->first();
+            $klien_akses = notulen::where('notulens.id', $notulen->id)->join('perusahaans', 'perusahaans.id', '=', 'notulens.perusahaan_id')->where('perusahaans.klien_id', Auth::guard('klien')->id())->first();
             // dd($klien_akses);
             if ($klien_akses != null){
                 return view('EditNotulen', [
@@ -336,11 +337,12 @@ class NotulenController extends Controller
         // dd($request);
         // dd($notulen->jumlah_revisi+1);
         if(Auth::guard('user')->check())
-        {;
+        {
             // if(is_null($request->catatan)) {
                 notulen::where('id', $notulen->id)
                        ->update(['tanda_tangan' => $request->tanda_tangan,
                             'isi_notulen' => $request->isi_notulen,
+                            'judul_meeting'=>$request->judul_meeting,
                              'edited_by' => Auth::id()
                     ]);
             // }

@@ -27,6 +27,12 @@
             <li class="nav-item {{ ($title === "Daftar Klien") ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('/daftar-klien') }}">Daftar Klien</a>
             </li>
+            <li class="nav-item {{ ($title === "Add Perusahaan") ? 'active' : '' }}">
+                <a class="nav-link" href="{{ url('/add-perusahaan') }}">Add Perusahaan</a>
+            </li>
+            <li class="nav-item {{ ($title === "Daftar Perusahaan") ? 'active' : '' }}">
+                <a class="nav-link" href="{{ url('/daftar-perusahaan') }}">Daftar Perusahaan</a>
+            </li>
             @can('superadmin')
             <li class="nav-item {{ ($title === "Add User") ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('/add-user') }}">Add User</a>

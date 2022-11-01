@@ -121,7 +121,12 @@ class KlienController extends Controller
      */
     public function edit(klien $klien)
     {
-        //
+        $kliens = klien::where('id', $klien->id)->first();          
+
+        return view('Klien.EditKlien', [
+            "title" => "Edit Klien",
+            "klien" => $kliens         
+        ]);
     }
 
     /**
@@ -133,7 +138,28 @@ class KlienController extends Controller
      */
     public function update(UpdateklienRequest $request, klien $klien)
     {
-        //
+        if($request->password === null)
+        {
+            klien::where('id', $klien->id)
+            ->update(['nama_klien' => $request->nama_klien,
+            'email' => $request->email,
+            'no_wa' => $request->no_wa
+            ]); 
+        }
+        else
+        {
+            $password = Hash::make($request->password);
+            {
+                klien::where('id', $klien->id)
+                ->update(['nama_klien' => $request->nama_klien,
+                'email' => $request->email,
+                'no_wa' => $request->no_wa,
+                'password'=>$password
+                ]); 
+            }
+        }
+        // $request->session()->flash('success','Perusahaan Berhasil Diupdate');
+        return redirect('/daftar-klien')->with('success', 'Klien Berhasil diupdate');
     }
 
     /**
@@ -144,7 +170,11 @@ class KlienController extends Controller
      */
     public function destroy(klien $klien)
     {
-        klien::destroy($klien->id);
+
+        klien::where('id', $klien->id)
+                       ->update([
+                             'deleted' => '1'
+                    ]);
         
         return redirect('/daftar-klien')->with('success', 'Klien Berhasil dihapus!');
     }

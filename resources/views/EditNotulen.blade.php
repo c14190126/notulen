@@ -42,7 +42,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <label style="color: black; font-weight: bold;" for="cabang">Nama Klien</label><br>
-                                        <input readonly="readonly" type="text" class="form-control" id="nama_klien" value="{{ $notulen->klien->nama_klien }}"/>
+                                        <input readonly="readonly" type="text" class="form-control" id="nama_perusahaan" value="{{ $notulen->perusahaan->klien->nama_klien . " - " . $notulen->perusahaan->nama_perusahaan }}"/>
                                     </div>
                                 </div>
                             </div>
@@ -69,8 +69,12 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-4">
-                                    <label for="text" style="color: black; font-weight: bold;">Judul Meeting</label>
-                                    <input readonly="readonly" type="text" class="form-control" id="judul_meeting" value="{{ $notulen->judul_meeting }}"/>
+                                        <label for="text" style="color: black; font-weight: bold;">Judul Meeting</label>
+                                        @can('superadmin')
+                                        <input type="text" class="form-control" name="judul_meeting" id="judul_meeting" value="{{ $notulen->judul_meeting }}"/>
+                                        @else
+                                        <input readonly="readonly" type="text" class="form-control" id="judul_meeting" value="{{ $notulen->judul_meeting }}"/>
+                                        @endcan
                                     </div>
                                 </div>
                             </div>
@@ -193,7 +197,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label style="color: black; font-weight: bold;" for="cabang">Nama Klien</label><br>
-                                        <input readonly="readonly" type="text" class="form-control" style="width:30%;" id="nama_klien" value="{{ $notulen->klien->nama_klien }}"/>
+                                        <input readonly="readonly" type="text" class="form-control" style="width:30%;" id="nama_perusahaan" value="{{ $notulen->perusahaan->klien->nama_klien . " - " . $notulen->perusahaan->nama_perusahaan }}"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="text" style="color: black; font-weight: bold;">Tanggal Meeting</label>
@@ -213,7 +217,8 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="text" style="color: black; font-weight: bold;">Judul Meeting</label>
-                                        <input readonly="readonly" type="text" class="form-control" id="judul_meeting" style="width:30%;" value="{{ $notulen->judul_meeting }}"/>
+                                        <input readonly type="text" class="form-control" id="judul_meeting" style="width:30%;" value="{{ $notulen->judul_meeting }}"/>
+
                                     </div>
                                     <div class="form-group">
                                         <label for="text" style="color: black; font-weight: bold;">Isi Meeting</label>

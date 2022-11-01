@@ -47,7 +47,7 @@
                             <tr>
                                 <td>{{ $notulen->tanggal }}</td>
                                 <td>{{ $notulen->User->name }}</td>
-                                <td>{{ $notulen->klien->nama_klien }}</td>
+                                <td>{{ $notulen->perusahaan->klien->nama_klien . " - " . $notulen->perusahaan->nama_perusahaan }}</td>
                                 <td>{{ $notulen->judul_meeting }}</td>
                                 {{-- @foreach ($last_edit as $le)
                                     @if($le->notulen_id == $notulen->id)

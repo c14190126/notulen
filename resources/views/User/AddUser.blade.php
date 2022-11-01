@@ -48,15 +48,26 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <input type="hidden" class="form-control @error('nama_klien') is-invalid @enderror" id="password" name="password" value="password" required autofocus/>
-                                    
+                                    <label style="color: black; font-weight: bold;" for="add-klien">Password User</label>
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" value="{{ old('password') }}" required autofocus/>
+                                    @error('email')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <input style="margin-left: 5px;" type="checkbox" onclick="myFunction()"> Show Password
+                                </div>
+                            </div>
+                        </div>            
                         <button type="submit" class="btn" style="background-color: #FECF5B; color: black;">
                             Submit
                         </button>
@@ -65,4 +76,20 @@
             </div>
         </div>
 </body>
+<script>
+    function myFunction() {
+        var x = document.getElementById("password");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+        var y = document.getElementById("password_baru");
+        if (y.type === "password") {
+            y.type = "text";
+        } else {
+            y.type = "password";
+        }
+    }
+</script>
 </html>

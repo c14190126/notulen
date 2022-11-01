@@ -7,7 +7,7 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Add Klien</h4>
+                        <h4 class="card-title">Edit Klien</h4>
                     </div>
                 </div>
                 <hr style="height: 10px;">
@@ -20,18 +20,13 @@
                             </button>
                         </div>
                     @endif
-                    <form action="{{ url('/add-klien') }}" method="post">
+                    <form action="{{ url('/edit-klien/'.$klien->id) }}" method="post">
                         @csrf
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-4">
                                     <label style="color: black; font-weight: bold;" for="add-klien">Nama Klien</label>
-                                    <input type="text" class="form-control @error('nama_klien') is-invalid @enderror" id="nama_klien" name="nama_klien" value="{{ old('nama_klien') }}" required autofocus/>
-                                    @error('nama_klien')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
+                                    <input type="text" class="form-control"  id="nama_klien" name="nama_klien" value="{{ $klien->nama_klien }}" required autofocus readonly/>
                                 </div>
                             </div>
                         </div>
@@ -39,12 +34,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <label style="color: black; font-weight: bold;" for="add-klien">Email Klien</label>
-                                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required autofocus/>
-                                    @error('email')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ $klien->email }}" autofocus/>
                                 </div>
                             </div>
                         </div>
@@ -52,12 +42,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <label style="color: black; font-weight: bold;" for="add-klien">No WA Klien</label>
-                                    <input type="number" class="form-control @error('no_wa') is-invalid @enderror" id="no_wa" name="no_wa" value="{{ old('no_wa') }}" required autofocus/>
-                                    @error('no_wa')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
+                                    <input type="number" class="form-control @error('no_wa') is-invalid @enderror" id="no_wa" name="no_wa"  value="{{ $klien->no_wa }}" autofocus/>
                                 </div>
                             </div>
                         </div>
@@ -65,7 +50,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <label style="color: black; font-weight: bold;" for="add-klien">Password User</label>
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" value="{{ old('password') }}" required autofocus/>
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" value="{{ old('password') }}" autofocus/>
                                     @error('email')
                                         <div class="invalid-feedback">
                                             {{ $message }}

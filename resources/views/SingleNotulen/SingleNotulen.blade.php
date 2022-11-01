@@ -32,7 +32,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <label style="color: black; font-weight: bold;" for="cabang">Nama Klien</label><br>
-                                    <input readonly="readonly" type="text" class="form-control" id="nama_klien" value="{{ $notulen->klien->nama_klien }}"/>
+                                    <input readonly="readonly" type="text" class="form-control" id="nama_perusahaan" value="{{ $notulen->perusahaan->klien->nama_klien . " - " . $notulen->perusahaan->nama_perusahaan }}"/>
                                 </div>
                             </div>
                         </div>

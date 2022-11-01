@@ -41,8 +41,8 @@ class klien extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    public function notulen()
+    public function perusahaan()
     {
-        return $this->hasMany(notulen::class);
+        return $this->hasMany(Perusahaan::class);
     }
 }

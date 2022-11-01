@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <title>{{ $title }}</title>
+    <link rel="shortcut icon" href="{{ asset('/images/Logo-Deus.jpg') }}">
+
     <meta charset="utf-8" />
     <meta
     name="viewport"

@@ -93,6 +93,45 @@ class UserController extends Controller
             return redirect('/change-password');
         }
     }
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\klien  $klien
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(User $user)
+    {
+        $users = User::where('id', $user->id)->first();          
+
+        return view('User.EditUser', [
+            "title" => "Edit Klien",
+            "user" => $users         
+        ]);
+    }
+
+    public function update(Request $request, User $user)
+    {
+        if($request->password === null)
+        {
+            User::where('id', $user->id)
+            ->update(['name' => $request->name,
+            'email' => $request->email,
+     ]); 
+        }
+        else
+        {
+            $password = Hash::make($request->password);
+            {
+                User::where('id', $user->id)
+                ->update(['name' => $request->name,
+                'email' => $request->email,
+                'password'=>$password
+         ]); 
+            }
+           }
+           return redirect('/daftar-user');
+  
+        }
 
     public function destroy(user $user)
     {

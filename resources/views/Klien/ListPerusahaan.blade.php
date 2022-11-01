@@ -18,30 +18,28 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th style="width:10%;"">No.</th>
+                                        <th>Nama Perusahaan</th>
                                         <th>Nama Klien</th>
-                                        <th>Email Klien</th>
-                                        <th>No Wa Klien</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                @foreach ($list_klien as $klien)
-                                @isset($klien->deleted)
+                                @foreach ($list_perusahaan as $perusahaan)
+                                @isset($perusahaan->deleted)
                                 @else
                                 <tr>
-                                        <td>{{ $klien->id }}</td>
-                                        <td>{{ $klien->nama_klien }}</td>
-                                        <td>{{ $klien->email }}</td>
-                                        <td>{{ $klien->no_wa }}</td>
+                                        <td>{{ $perusahaan->id }}</td>
+                                        <td>{{ $perusahaan->nama_perusahaan }}</td>
+                                        <td>{{ $perusahaan->klien->nama_klien }}</td>
                                         <td>
                                             @can('superadmin')
-                                            <form action="{{ url('/klien/'.$klien->id) }}" method="POST" class="d-inline">
+                                            <form action="{{ url('/perusahaan/'.$perusahaan->id) }}" method="POST" class="d-inline">
                                                 @method('delete')
                                                 @csrf
                                                 <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </form>
-                                            <form action="{{ url('/klien-edit/'.$klien->id) }}" method="POST" class="d-inline">
+                                            <form action="{{ url('/perusahaan-edit/'.$perusahaan->id) }}" method="POST" class="d-inline">
                                                 @method('put')
                                                 @csrf
                                                 <button class="btn btn-success">
@@ -52,7 +50,7 @@
                                         </td>
                                     </tr>
                                 @endisset
-                                    
+
                                 @endforeach
                             </table>
                         </div>

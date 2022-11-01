@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateKliensTable extends Migration
+class CreatePerusahaansTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,13 @@ class CreateKliensTable extends Migration
      */
     public function up()
     {
-        Schema::create('kliens', function (Blueprint $table) {
+        Schema::create('perusahaans', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_klien');
-            $table->string('email')->unique();
-            $table->string('no_wa')->unique();
-            $table->string('password');
+            $table->string('nama_perusahaan');
+            $table->foreignId('klien_id');
             $table->string('deleted')->nullable();
-            $table->rememberToken();
             $table->timestamps();
+
         });
     }
 
@@ -32,6 +30,6 @@ class CreateKliensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('kliens');
+        Schema::dropIfExists('perusahaans');
     }
 }

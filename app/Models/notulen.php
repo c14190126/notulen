@@ -10,9 +10,9 @@ class notulen extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
-    public function klien()
+    public function perusahaan()
     {
-        return $this->belongsTo(klien::class);
+        return $this->belongsTo(Perusahaan::class);
     }
     public function user()
     {

@@ -16,7 +16,7 @@ class CreateNotulensTable extends Migration
         Schema::create('notulens', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->foreignId('klien_id');
+            $table->foreignId('perusahaan_id');
             $table->date('tanggal');
             $table->time('jam_mulai');
             $table->time('jam_selesai');

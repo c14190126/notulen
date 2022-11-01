@@ -13,7 +13,7 @@
                 <hr style="height: 10px;">
                 <div class="iq-card-body">
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <table class="table table-striped table-borderless">
                                 <thead class="thead-dark">
                                     <tr>
@@ -35,6 +35,13 @@
                                                 @csrf
                                                 <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
                                                     <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                            <form action="{{ url('/user-edit/'.$user->id) }}" method="POST" class="d-inline">
+                                                @method('put')
+                                                @csrf
+                                                <button class="btn btn-success">
+                                                    <i class="fa fa-pencil-square-o"></i>
                                                 </button>
                                             </form>
                                             @endif

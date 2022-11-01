@@ -90,15 +90,15 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <label style="color: black; font-weight: bold;" for="cabang">Nama Klien</label><br>
-                                    <select class="test form-control @error('klien_id') is-invalid @enderror" data-live-search="true" id="klien_id" name="klien_id" required>
+                                    <select class="test form-control @error('perusahaan_id') is-invalid @enderror" data-live-search="true" id="perusahaan_id" name="perusahaan_id" required>
                                         <option selected="" disabled="">
                                             -- Pilih Klien --
                                         </option>
-                                        @foreach ($list_klien as $klien)
-                                            @if(old('klien_id') == $klien->id)
-                                                <option value="{{ $klien->id }}" selected>{{ $klien->nama_klien }}</option>
+                                        @foreach ($list_perusahaan as $perusahaan)
+                                            @if(old('perusahaan_id') == $perusahaan->id)
+                                                <option value="{{ $perusahaan->id }}" selected>{{ $perusahaan->klien->nama_klien }} - {{ $klien->nama_perusahaan }}</option>
                                             @else
-                                                <option value="{{ $klien->id }}">{{ $klien->nama_klien }}</option>
+                                                <option value="{{ $perusahaan->id }}">{{ $perusahaan->klien->nama_klien }} - {{ $perusahaan->nama_perusahaan }}</option>
                                             @endif
                                             {{-- <option value="{{ $klien->id }}">{{ $klien->nama_klien }}</option> --}}
                                         @endforeach

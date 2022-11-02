@@ -96,7 +96,7 @@
                                         </option>
                                         @foreach ($list_perusahaan as $perusahaan)
                                             @if(old('perusahaan_id') == $perusahaan->id)
-                                                <option value="{{ $perusahaan->id }}" selected>{{ $perusahaan->klien->nama_klien }} - {{ $klien->nama_perusahaan }}</option>
+                                                <option value="{{ $perusahaan->id }}" selected>{{ $perusahaan->klien->nama_klien }} - {{ $perusahaan->nama_perusahaan }}</option>
                                             @else
                                                 <option value="{{ $perusahaan->id }}">{{ $perusahaan->klien->nama_klien }} - {{ $perusahaan->nama_perusahaan }}</option>
                                             @endif

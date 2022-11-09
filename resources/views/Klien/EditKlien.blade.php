@@ -26,7 +26,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <label style="color: black; font-weight: bold;" for="add-klien">Nama Klien</label>
-                                    <input type="text" class="form-control"  id="nama_klien" name="nama_klien" value="{{ $klien->nama_klien }}" required autofocus readonly/>
+                                    <input type="text" class="form-control"  id="nama_klien" name="nama_klien" value="{{ $klien->nama_klien }}" required autofocus />
                                 </div>
                             </div>
                         </div>

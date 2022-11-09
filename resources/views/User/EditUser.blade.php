@@ -26,7 +26,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <label style="color: black; font-weight: bold;" for="add-klien">Nama User</label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ $user->name }}" readonly autofocus/>
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ $user->name }}"  autofocus/>
                                 </div>
                             </div>
                         </div>

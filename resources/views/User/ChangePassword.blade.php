@@ -27,7 +27,7 @@
                             </button>
                         </div>
                     @endif
-                    <form action="{{ url('/change-password/'.Auth::guard('user')->id()) }}" method="post">
+                    <form action="{{ url('/user-change-password/'.Auth::guard('user')->id()) }}" method="post">
                         @csrf
                         <div class="form-group">
                             <div class="row">

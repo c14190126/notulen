@@ -90,7 +90,7 @@ class UserController extends Controller
         else
         {
             $request->session()->flash('fail','Password Tidak Berhasil Diganti');
-            return redirect('/change-password');
+            return redirect('/user-change-password');
         }
     }
     /**

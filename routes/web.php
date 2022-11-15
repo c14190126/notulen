@@ -38,7 +38,7 @@ Route::post('/send-wa', [NotulenController::class, 'send_wa'])->middleware('auth
 
 Route::get('/notulen/{id}', [NotulenController::class, 'show']);
 Route::delete('/notulen/{notulen:id}', [NotulenController::class, 'destroy']);
-Route::get('/notulen/{notulen:id}/edit', [NotulenController::class, 'edit'])->middleware('auth:user,klien');
+Route::get ('/notulen/{notulen:id}/edit', [NotulenController::class, 'edit'])->middleware('auth:user,klien');
 Route::put('/edit-notulen/{notulen:id}', [NotulenController::class, 'update']);
 Route::post('/notulen/{id}/edit/add-catatan', [NotesNotulenController::class, 'store']);
 
@@ -53,7 +53,9 @@ Route::post('/change-password/{id}', [KlienController::class, 'updatePassword'])
 
 Route::get('/daftar-perusahaan', [PerusahaanController::class, 'index'])->middleware('auth:user');
 Route::get('/add-perusahaan', [PerusahaanController::class, 'indexAdd'])->middleware('auth:user');
+Route::get('/assign-perusahaan', [PerusahaanController::class, 'indexAssign'])->middleware('auth:user');
 Route::post('/add-perusahaan', [PerusahaanController::class, 'store']);
+Route::post('/assign-perusahaan', [PerusahaanController::class, 'storedetail']);
 Route::post('/edit-perusahaan/{perusahaan:id}', [PerusahaanController::class, 'update']);
 Route::delete('/perusahaan/{perusahaan:id}', [PerusahaanController::class, 'destroy']);
 Route::put('/perusahaan-edit/{perusahaan:id}', [PerusahaanController::class, 'edit']);

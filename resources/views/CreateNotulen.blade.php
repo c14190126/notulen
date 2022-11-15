@@ -96,9 +96,9 @@
                                         </option>
                                         @foreach ($list_perusahaan as $perusahaan)
                                             @if(old('perusahaan_id') == $perusahaan->id)
-                                                <option value="{{ $perusahaan->id }}" selected>{{ $perusahaan->klien->nama_klien }} - {{ $perusahaan->nama_perusahaan }}</option>
+                                                <option value="{{ $perusahaan->id }}" selected>{{ $perusahaan->klien->nama_klien }} - {{ $perusahaan->perusahaan->nama_perusahaan }}</option>
                                             @else
-                                                <option value="{{ $perusahaan->id }}">{{ $perusahaan->klien->nama_klien }} - {{ $perusahaan->nama_perusahaan }}</option>
+                                                <option value="{{ $perusahaan->id }}">{{ $perusahaan->klien->nama_klien }} - {{ $perusahaan->perusahaan->nama_perusahaan }}</option>
                                             @endif
                                             {{-- <option value="{{ $klien->id }}">{{ $klien->nama_klien }}</option> --}}
                                         @endforeach
@@ -110,7 +110,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <label for="text" style="color: black; font-weight: bold;">Tanggal Meeting</label>
-                                    <input readonly="readonly" type="date" class="form-control @error('tanggal') is-invalid @enderror"  id="tanggal" name="tanggal" value="{{ date('Y-m-d') }}" required autofocus/>
+                                    <input  type="date" class="form-control @error('tanggal') is-invalid @enderror"  id="tanggal" name="tanggal" value="{{ date('d-m-Y') }}" required autofocus/>
                                     {{-- <input type="text" class="form-control @error('nama_pelanggan') is-invalid @enderror" id="nama_pelanggan" name="nama_pelanggan" required autofocus value="{{ old('nama_pelanggan') }}"/> --}}
                                     @error('tanggal')
                                         <div class="invalid-feedback">

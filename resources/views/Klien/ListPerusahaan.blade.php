@@ -19,7 +19,6 @@
                                     <tr>
                                         <th style="width:10%;"">No.</th>
                                         <th>Nama Perusahaan</th>
-                                        <th>Nama Klien</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -31,7 +30,6 @@
                                     <?php $i++ ?>
                                         <td>{{ $i }}</td>
                                         <td>{{ $perusahaan->nama_perusahaan }}</td>
-                                        <td>{{ $perusahaan->klien->nama_klien }}</td>
                                         <td>
                                             @can('superadmin')
                                             <form action="{{ url('/perusahaan/'.$perusahaan->id) }}" method="POST" class="d-inline">

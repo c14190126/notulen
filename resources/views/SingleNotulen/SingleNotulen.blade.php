@@ -32,7 +32,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <label style="color: black; font-weight: bold;" for="cabang">Nama Klien</label><br>
-                                    <input readonly="readonly" type="text" class="form-control" id="nama_perusahaan" value="{{ $notulen->perusahaan->klien->nama_klien . " - " . $notulen->perusahaan->nama_perusahaan }}"/>
+                                    <input readonly="readonly" type="text" class="form-control" id="nama_perusahaan" value="{{ $notulen->perusahaan->klien->nama_klien . " - " . $notulen->perusahaan->perusahaan->nama_perusahaan }}"/>
                                 </div>
                             </div>
                         </div>
@@ -148,18 +148,7 @@
                                 @endempty
                                 @endif
                             </div>
-                            {{-- <div class="col-sm-2">
-                                @if(Str::length(Auth::guard('user')->user())>0)
-                                @empty($notulen->tanda_tangan)
-                                <form action="{{  url('/send-email')  }}" method="post">
-                                    @csrf
-                                    <input hidden type="text" name="link_edit" value="{{ url('/notulen/'.$notulen->id.'/edit') }}" id="link_edit">
-                                    <input hidden type="text" name="id_notulen" value="{{ $notulen->id }}">
-                                    <button type="submit" class="btn btn-danger" style="width: 160px;"> Send Email</button>
-                                </form>
-                                @endempty
-                                @endif
-                            </div> --}}
+                            
                             @if(Str::length(Auth::guard('user')->user())>0)
                             @empty($notulen->tanda_tangan) 
                             <div class="col-sm-2">
@@ -175,14 +164,17 @@
         <script>
             function copyLink() {
               /* Get the text field */
-              var copyText = document.getElementById("link-edit");
-            
-              /* Select the text field */
-              copyText.select();
-              copyText.setSelectionRange(0, 99999); /* For mobile devices */
-            
-              /* Copy the text inside the text field */
-              navigator.clipboard.writeText(copyText.value);
+             // Get the text field
+             var copyText = document.getElementById("link_edit");
+
+            // Select the text field
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(copyText.value);
+
+            // Alert the copied text
             }
         </script>
 </body>

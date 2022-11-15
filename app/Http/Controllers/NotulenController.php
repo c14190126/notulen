@@ -6,6 +6,7 @@ use App\Models\notulen;
 use App\Models\klien;
 use App\Http\Requests\StorenotulenRequest;
 use App\Http\Requests\UpdatenotulenRequest;
+use App\Models\detail_klien;
 use App\Models\NotesNotulen;
 use App\Models\Perusahaan;
 use App\Models\User;
@@ -39,15 +40,23 @@ class NotulenController extends Controller
             ]);
         }
         else{
-            $klien_akses = notulen::join('perusahaans', 'perusahaans.id', '=', 'notulens.perusahaan_id')->where('perusahaans.klien_id', Auth::guard('klien')->id())->get('perusahaans.id');
-            
-
+            $klien_akses = detail_klien::where('detail_kliens.klien_id', Auth::guard('klien')->id())->get('detail_kliens.perusahaan_id');
+            $list_notulen = DB::table('notulens as n')
+                       ->join('detail_kliens as d', 'd.perusahaan_id', '=', 'n.id')
+                       ->join('users as u','n.user_id','=','u.id')
+                       ->join('perusahaans as p','p.id','=','d.perusahaan_id')
+                       ->join('kliens as k','k.id','d.klien_id')
+                       ->wherein('d.perusahaan_id',$klien_akses)
+                       ->select('n.*','u.name','p.nama_perusahaan','k.nama_klien')->distinct()
+                       ->get();
+            // dd($list_notulen);
             return view('ListNotulen', [
                 "title" => "Daftar Notulen",
-                "list_notulen" => notulen::latest()->whereIn('perusahaan_id', $klien_akses)->whereNull('tanda_tangan')->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+                "list_notulen" => $list_notulen,
                 "last_edit" => NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'),'notulen_id')->get()
-
             ]);
+            // if($user != NULL) {
+            // }
         }
        
     }
@@ -67,10 +76,10 @@ class NotulenController extends Controller
             ]);
         }
         else{
-            $klien_akses = notulen::join('perusahaans', 'perusahaans.id', '=', 'notulens.perusahaan_id')->where('perusahaans.klien_id', Auth::guard('klien')->id())->get('perusahaans.id');
+            $klien_akses = detail_klien::where('detail_kliens.klien_id', Auth::guard('klien')->id())->get('detail_kliens.perusahaan_id');
             return view('ListNotulenAcc', [
                 "title" => "Daftar Notulen Acc",
-                "list_notulen" => notulen::latest()->whereNotNull('tanda_tangan')->whereIn('perusahaan_id', $klien_akses)->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+                "list_notulen" => notulen::latest()->join('detail_kliens','detail_kliens.id','=','notulens.perusahaan_id')->whereIn('detail_kliens.perusahaan_id', $klien_akses)->whereNotNull('tanda_tangan')->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
                 "last_edit" => NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'),'notulen_id')->get()
 
             ]);
@@ -83,14 +92,13 @@ class NotulenController extends Controller
     {
         return view('CreateNotulen', [
             "title" => "Create Notulen",
-            "list_perusahaan" => Perusahaan::where('deleted',Null)->get(),
-
+            "list_perusahaan" => detail_klien::where('deleted',Null)->get(),
         ]);
     }
 
     public function send_wa(Request $request)
     {
-        $notulen = notulen::join('kliens as k', 'notulens.klien_id', '=', 'k.id')->where('notulens.id', $request->id_notulen)->select('notulens.*', 'k.no_wa', 'k.nama_klien', 'k.email')->first();
+        $notulen = notulen::join('perusahaans as p', 'notulens.perusahaan_id', '=', 'p.id')->join('kliens as k', 'p.klien_id','k.id')->where('notulens.id', $request->id_notulen)->select('notulens.*', 'p.klien_id', 'k.nama_klien', 'k.email')->first();
         $tanggal = Carbon::createFromFormat('Y-m-d', $notulen->tanggal)->format('d F Y');
         $jam_mulai = Carbon::createFromFormat('H:i:s', $notulen->jam_mulai)->format('H:i');
         $jam_selesai = Carbon::createFromFormat('H:i:s', $notulen->jam_selesai)->format('H:i');
@@ -237,8 +245,11 @@ class NotulenController extends Controller
         }
         else if (Auth::guard('klien')->check()) 
         {
-            $klien_akses = notulen::where('notulens.id', $notulen->id)->join('perusahaans', 'perusahaans.id', '=', 'notulens.perusahaan_id')->where('perusahaans.klien_id', Auth::guard('klien')->id())->first();
-            if ($klien_akses != null){
+            $akses_notulen = detail_klien::where('detail_kliens.perusahaan_id','=',$id)->where('detail_kliens.klien_id','=',Auth::guard('klien')->check())->get();
+            // $klien_akses = notulen::where('notulens.id', $notulen->id)->join('perusahaans', 'perusahaans.id', '=', 'notulens.perusahaan_id')->where('perusahaans.klien_id', Auth::guard('klien')->id())->first();
+            $notulen = notulen::join('detail_kliens', 'detail_kliens.id', '=', 'notulens.perusahaan_id')->where('notulens.id', $notulen->id)->select('detail_kliens.klien_id')->first();
+            if ($akses_notulen != null){
+            if ($notulen->klien_id ){
                 return view('SingleNotulen.SingleNotulen', [
                     "title" => "Notulen",
                     "notulen" => notulen::where('id', $id)->first(),
@@ -268,6 +279,7 @@ class NotulenController extends Controller
      * @param  \App\Models\notulen  $notulen
      * @return \Illuminate\Http\Response
      */
+}
     public function edit(notulen $notulen)
     {
         if (Auth::guard("user")->check())
@@ -306,7 +318,7 @@ class NotulenController extends Controller
         }
         else
         {
-            $klien_akses = notulen::where('notulens.id', $notulen->id)->join('perusahaans', 'perusahaans.id', '=', 'notulens.perusahaan_id')->where('perusahaans.klien_id', Auth::guard('klien')->id())->first();
+            $klien_akses = detail_klien::where('detail_kliens.klien_id', Auth::guard('klien')->id())->get('detail_kliens.perusahaan_id');
             // dd($klien_akses);
             if ($klien_akses != null){
                 return view('EditNotulen', [

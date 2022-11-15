@@ -30,26 +30,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <label style="color: black; font-weight: bold;" for="klien_id">Nama Klien</label><br>
-                                    <select class="test form-control @error('klien_id') is-invalid @enderror" data-live-search="true" id="klien_id" name="klien_id" required>
-                                        <option selected="" disabled="">
-                                            -- Pilih Klien --
-                                        </option>
-                                        @foreach ($list_klien as $klien)
-                                            @if(old('klien_id', $perusahaan->klien_id) == $klien->id)
-                                                <option value="{{ $klien->id }}" selected>{{ $klien->nama_klien }}</option>
-                                            @else
-                                                <option value="{{ $klien->id }}">{{ $klien->nama_klien }}</option>
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>   
-                        
                         <button type="submit" class="btn" style="background-color: #FECF5B; color: black;">
                             Submit
                         </button>

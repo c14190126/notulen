@@ -42,7 +42,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <label style="color: black; font-weight: bold;" for="cabang">Nama Klien</label><br>
-                                        <input readonly="readonly" type="text" class="form-control" id="nama_perusahaan" value="{{ $notulen->perusahaan->klien->nama_klien . " - " . $notulen->perusahaan->nama_perusahaan }}"/>
+                                        <input readonly="readonly" type="text" class="form-control" id="nama_perusahaan" value="{{ $notulen->perusahaan->klien->nama_klien . " - " . $notulen->perusahaan->perusahaan->nama_perusahaan }}"/>
                                     </div>
                                 </div>
                             </div>
@@ -197,7 +197,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label style="color: black; font-weight: bold;" for="cabang">Nama Klien</label><br>
-                                        <input readonly="readonly" type="text" class="form-control" style="width:30%;" id="nama_perusahaan" value="{{ $notulen->perusahaan->klien->nama_klien . " - " . $notulen->perusahaan->nama_perusahaan }}"/>
+                                        <input readonly="readonly" type="text" class="form-control" style="width:30%;" id="nama_perusahaan" value="{{ $notulen->perusahaan->klien->nama_klien . " - " . $notulen->perusahaan->perusahaan->nama_perusahaan }}"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="text" style="color: black; font-weight: bold;">Tanggal Meeting</label>

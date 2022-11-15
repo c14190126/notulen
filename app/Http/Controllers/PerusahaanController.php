@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Perusahaan;
 use App\Http\Requests\StorePerusahaanRequest;
 use App\Http\Requests\UpdatePerusahaanRequest;
+use App\Models\detail_klien;
 use Illuminate\Support\Facades\Auth;
 use App\Models\klien;
 
@@ -25,13 +26,23 @@ class PerusahaanController extends Controller
             ]);
         }
     }
-    
     public function indexAdd()
     {
         if(Auth::guard('user')->check()) {
             return view('Klien.AddPerusahaan', [
                 "title" => "Add Perusahaan",
-                "list_klien" => klien::where('deleted', NULL)->get()
+                "list_klien" => klien::where('deleted', NULL)->get(),
+                "list_perusahaan" => Perusahaan::where('deleted', NULL)->get()
+            ]);
+        }
+    }
+    public function indexAssign()
+    {
+        if(Auth::guard('user')->check()) {
+            return view('Klien.AssignPerusahaan', [
+                "title" => "Assign Perusahaan",
+                "list_klien" => klien::where('deleted', NULL)->get(),
+                "list_perusahaan" => Perusahaan::where('deleted', NULL)->get()
             ]);
         }
     }
@@ -56,7 +67,6 @@ class PerusahaanController extends Controller
     {
         $validatedData = $request->validate([
             'nama_perusahaan' => 'required|max:255',
-            'klien_id' => 'required'
         ]);
         
         Perusahaan::create($validatedData);
@@ -64,7 +74,18 @@ class PerusahaanController extends Controller
         $request->session()->flash('success','Penyimpanan Berhasil');
         return redirect('/add-perusahaan');
     }
+    public function storedetail(StorePerusahaanRequest $request)
+    {
+        $validatedData = $request->validate([
+            'perusahaan_id' => 'required|max:255',
+            'klien_id' => 'required|max:255'
+        ]);
+        
+        detail_klien::create($validatedData);
 
+        $request->session()->flash('success','Penyimpanan Berhasil');
+        return redirect('/add-perusahaan');
+    }
     /**
      * Display the specified resource.
      *
@@ -89,7 +110,6 @@ class PerusahaanController extends Controller
         return view('Klien.EditPerusahaan', [
             "title" => "Edit Perusahaan",
             "perusahaan" => $perusahaans,
-            "list_klien" => klien::all()         
         ]);
     }
 
@@ -104,7 +124,6 @@ class PerusahaanController extends Controller
     {
         Perusahaan::where('id', $perusahaan->id)
                   ->update(['nama_perusahaan' => $request->nama_perusahaan,
-                            'klien_id' => $request->klien_id,
                     ]);
         $request->session()->flash('success','Perusahaan Berhasil Diupdate');
         return redirect('/daftar-perusahaan');

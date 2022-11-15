@@ -36,19 +36,19 @@
                         <thead class="thead-dark">
                             <tr>
                                 <th>Tanggal Meeting</th>
-                                <th>Creator</th>
                                 <th>Nama Klien</th>
                                 <th>Judul Meeting</th>
+                                <th>Creator</th>
                                 <th>Last Edited At</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         @foreach ($list_notulen as $notulen)
                             <tr>
-                                <td>{{ $notulen->tanggal }}</td>
-                                <td>{{ $notulen->user->name }}</td>
-                                <td>{{ $notulen->perusahaan->klien->nama_klien . " - " . $notulen->perusahaan->nama_perusahaan }}</td>
+                                <td>{{ date('d-m-Y',strtotime($notulen->tanggal )) }}</td>
+                                <td>{{ $notulen->perusahaan->klien->nama_klien . " - " . $notulen->perusahaan->perusahaan->nama_perusahaan }}</td>
                                 <td>{{ $notulen->judul_meeting }}</td>
+                                <td>{{ $notulen->user->name }}</td>
                                 @php
                                     $count=0   
                                 @endphp

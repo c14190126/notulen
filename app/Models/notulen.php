@@ -12,7 +12,7 @@ class notulen extends Model
 
     public function perusahaan()
     {
-        return $this->belongsTo(Perusahaan::class);
+        return $this->belongsTo(detail_klien::class);
     }
     public function user()
     {

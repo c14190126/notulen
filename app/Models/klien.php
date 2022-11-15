@@ -43,6 +43,6 @@ class klien extends Authenticatable
     ];
     public function perusahaan()
     {
-        return $this->hasMany(Perusahaan::class);
+        return $this->hasMany(detail_klien::class);
     }
 }

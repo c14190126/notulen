@@ -15,7 +15,7 @@ class Perusahaan extends Model
 
     public function klien()
     {
-        return $this->belongsTo(klien::class);
+        return $this->hasMany(detail_klien::class);
     }
     public function notulen()
     {

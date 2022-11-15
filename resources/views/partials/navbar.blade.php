@@ -20,17 +20,17 @@
                         <li class="nav-item {{ ($title === "Create Notulen") ? 'active' : '' }}">
                             <a class="nav-link" href="{{ url('/add-notulen') }}">Create Notulen</a>
                         </li>
-                        @endif
                         <li class="nav-item {{ ($title === "Daftar Notulen") ? 'active' : '' }}">
                             <a class="nav-link" href="{{ url('/') }}">List Notulen</a>
                         </li>
                         <li class="nav-item {{ ($title === "Daftar Notulen Acc") ? 'active' : '' }}">
                             <a class="nav-link" href="{{ url('/list-notulen-acc') }}">List Notulen Acc</a>
                         </li>
-                    
+                        
                     </ul>
                 </div>
             </li>
+            @endif
             @if(Str::length(Auth::guard('user')->user())>0)
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#klien" aria-expanded="false" aria-controls="klien">
@@ -51,7 +51,9 @@
                     <li class="nav-item {{ ($title === "Daftar Perusahaan") ? 'active' : '' }}">
                         <a class="nav-link" href="{{ url('/daftar-perusahaan') }}">Daftar Perusahaan</a>
                     </li>
-                    
+                    <li class="nav-item {{ ($title === "Daftar Perusahaan") ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ url('/assign-perusahaan') }}">Assign Perusahaan</a>
+                    </li>
                 </ul>
                 </div>
             </li>
@@ -75,6 +77,12 @@
             @endcan
             @endif
             @if(Str::length(Auth::guard('klien')->user())>0)
+            <li class="nav-item {{ ($title === "Daftar Notulen") ? 'active' : '' }}">
+                <a class="nav-link" href="{{ url('/') }}">List Notulen</a>
+            </li>
+            <li class="nav-item {{ ($title === "Daftar Notulen Acc") ? 'active' : '' }}">
+                <a class="nav-link" href="{{ url('/list-notulen-acc') }}">List Notulen Acc</a>
+            </li>
             <li class="nav-item {{ ($title === "Change Password") ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('/change-password') }}">Change Password</a>
             </li>

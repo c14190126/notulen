@@ -40,19 +40,21 @@ class NotulenController extends Controller
             ]);
         }
         else{
-            $klien_akses = detail_klien::where('detail_kliens.klien_id', Auth::guard('klien')->id())->get('detail_kliens.perusahaan_id');
-            $list_notulen = DB::table('notulens as n')
-                       ->join('detail_kliens as d', 'd.perusahaan_id', '=', 'n.id')
-                       ->join('users as u','n.user_id','=','u.id')
-                       ->join('perusahaans as p','p.id','=','d.perusahaan_id')
-                       ->join('kliens as k','k.id','d.klien_id')
-                       ->wherein('d.perusahaan_id',$klien_akses)
-                       ->select('n.*','u.name','p.nama_perusahaan','k.nama_klien')->distinct()
-                       ->get();
-            // dd($list_notulen);
+            // $klien_akses = detail_klien::where('detail_kliens.klien_id', Auth::guard('klien')->id())->get('detail_kliens.perusahaan_id');
+            $daftar_perusahaan = detail_klien::join('kliens', 'kliens.id', '=', 'detail_kliens.klien_id')->where('kliens.id', Auth::guard('klien')->id())->get('detail_kliens.perusahaan_id');
+            // $daftar_notulen = notulen::join('detail_kliens', 'notulens.perusahaan_id', '=', 'detail_kliens.id')->join('users','notulens.user_id','=','users.id')->join('kliens','detail_kliens.klien_id','=','kliens.id')->join('perusahaans','detail_kliens.perusahaan_id','=','perusahaans.id')->whereIn('detail_kliens.perusahaan_id', $daftar_perusahaan)->get();
+            // $list_notulen = DB::table('notulens as n')
+            //            ->join('detail_kliens as d', 'd.perusahaan_id', '=', 'n.id')
+            //            ->join('users as u','n.user_id','=','u.id')
+            //            ->join('perusahaans as p','p.id','=','d.perusahaan_id')
+            //            ->join('kliens as k','k.id','d.klien_id')
+            //            ->wherein('d.perusahaan_id',$klien_akses)
+            //            ->select('n.*','u.name','p.nama_perusahaan','k.nama_klien')->distinct()
+            //            ->get();
+            // dd($daftar_notulen);
             return view('ListNotulen', [
                 "title" => "Daftar Notulen",
-                "list_notulen" => $list_notulen,
+                "list_notulen" => notulen::join('detail_kliens', 'notulens.perusahaan_id', '=', 'detail_kliens.id')->join('users','notulens.user_id','=','users.id')->join('kliens','detail_kliens.klien_id','=','kliens.id')->join('perusahaans','detail_kliens.perusahaan_id','=','perusahaans.id')->whereIn('detail_kliens.perusahaan_id', $daftar_perusahaan)->select('notulens.*', 'kliens.nama_klien', 'perusahaans.nama_perusahaan', 'users.name')->get(),
                 "last_edit" => NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'),'notulen_id')->get()
             ]);
             // if($user != NULL) {

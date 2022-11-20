@@ -26,6 +26,9 @@
                         <li class="nav-item {{ ($title === "Daftar Notulen Acc") ? 'active' : '' }}">
                             <a class="nav-link" href="{{ url('/list-notulen-acc') }}">List Notulen Acc</a>
                         </li>
+                        <li class="nav-item {{ ($title === "Daftar Notulen Acc") ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ url('/list-notulen-draft') }}">List Draft Notulen</a>
+                        </li>
                         
                     </ul>
                 </div>

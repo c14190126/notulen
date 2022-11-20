@@ -7,7 +7,7 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Daftar Perusahaan Klien</h4>
+                        <h4 class="card-title">Daftar Klien</h4>
                     </div>
                 </div>
                 <hr style="height: 10px;">
@@ -18,42 +18,23 @@
                                 <thead class="thead-dark text-center">
                                     <tr>
                                         <th style="width:10%;"">No.</th>
-                                        <th>Nama Perusahaan</th>
-                                        <th>Action</th>
+                                        <th>Nama Klien</th>
+                                        <th>Email Klien</th>
                                     </tr>
                                 </thead>
                                 <?php $i = 0 ?>
-                                @foreach ($list_perusahaan as $perusahaan)
-                                @isset($perusahaan->deleted)
+                                @foreach ($list_perusahaan as $klien)
+                                @isset($klien->deleted)
                                 @else
                                 <tr>
                                     <?php $i++ ?>
-                                        <td>{{ $i }}</td>
-                                        <td>{{ $perusahaan->nama_perusahaan }}</td>
-                                        <td>
-                                            @can('superadmin')
-                                            <form action="{{ url('/perusahaan/'.$perusahaan->id) }}" method="POST" class="d-inline">
-                                                @method('delete')
-                                                @csrf
-                                                <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </form>
-                                            <form action="{{ url('/perusahaan-edit/'.$perusahaan->id) }}" method="POST" class="d-inline">
-                                                @method('put')
-                                                @csrf
-                                                <button class="btn btn-success">
-                                                    <i class="fa fa-pencil-square-o"></i>
-                                                </button>
-                                            </form>
-                                                <a href="{{ url('/daftar-klien-perusahaan/'.$perusahaan->id) }}" class="btn btn-primary">
-                                                    <i class="fa fa-info-circle"></i>
-                                                </a>
-                                            @endcan
-                                        </td>
-                                    </tr>
+                                    <td>{{$i}}</td>
+                                    <td>{{ $klien->klien->nama_klien }}</td>
+                                    <td>{{ $klien->klien->email }}</td>
+                                    
+                                </tr>
                                 @endisset
-
+                                    
                                 @endforeach
                             </table>
                         </div>

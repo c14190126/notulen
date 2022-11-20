@@ -282,6 +282,7 @@
                                         $('.form-check').click(function () {
                                             if($('#tolak').is(':checked')==true){
                                                 var status = $('#tolak').val()
+                                                        $('#catatan').html('');
                                                         $('#catatan').append('<label for="text" style="color: black; font-weight: bold;">Catatan</label>\
                                                         <input id="catatan_klien" type="hidden" name="catatan_klien" value="{{ old('catatan_klien') }}">\
                                                         <trix-editor input="catatan_klien"></trix-editor>')

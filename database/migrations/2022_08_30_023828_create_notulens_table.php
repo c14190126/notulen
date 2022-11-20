@@ -27,6 +27,7 @@ class CreateNotulensTable extends Migration
             // $table->date('tanggal_revisi')->nullable();
             $table->foreignId('edited_by')->nullable();
             $table->boolean('private')->default(false);
+            $table->string('draft')->nullable();
             $table->text('tanda_tangan')->nullable();
             $table->text('tanda_tangan_deus');
             $table->timestamps();

@@ -5,9 +5,9 @@
         <!-- Page Content  -->
         <div id="content" class="p-4 p-md-5 pt-5">
             <div class="iq-card">
-                <div class="iq-card-header d-flex justify-content-between">
+                <div class="iq-card-header d-flex justify-content-between"> 
                     <div class="iq-header-title">
-                        <h4 class="card-title">Daftar Notulen Acc</h4>
+                        <h4 class="card-title">Daftar Draft Notulen</h4>
                     </div>
                 </div>
                 <hr style="height: 10px;">
@@ -39,30 +39,17 @@
                                 <th>Nama Klien</th>
                                 <th>Judul Meeting</th>
                                 <th>Creator</th>
-                                <th>Last Edited At</th>
+                                {{-- <th>Last Edited At</th> --}}
                                 <th>Action</th>
                             </tr>
                         </thead>
+                        @if(Str::length(Auth::guard('klien')->user())>0)
                         @foreach ($list_notulen as $notulen)
                             <tr>
-                                <td>{{ date('d-m-Y',strtotime($notulen->tanggal )) }}</td>
-                                <td>{{ $notulen->perusahaan->klien->nama_klien . " - " . $notulen->perusahaan->perusahaan->nama_perusahaan }}</td>
+                                <td>{{ date('d-m-Y',strtotime($notulen->tanggal ))}}</td>
+                                <td>{{ $notulen->nama_perusahaan . " - " . $notulen->nama_klien }}</td>
                                 <td>{{ $notulen->judul_meeting }}</td>
-                                <td>{{ $notulen->user->name }}</td>
-                                @php
-                                    $count=0   
-                                @endphp
-                                @foreach ($last_edit as $le)
-                                    @if($le->notulen_id == $notulen->id)
-                                        <td>{{ $le->max }}</td>
-                                        @php
-                                            $count++
-                                        @endphp
-                                    @endif
-                                @endforeach
-                                @if ($count == 0)
-                                    <td>&nbsp;</td>
-                                @endif
+                                <td>{{ $notulen->name }}</td>
                                 <td>
                                     <button class="btn btn-info" onclick="window.location.href='{{ url('/notulen/'.$notulen->id) }}'">
                                         <i class="fa fa-eye"></i>
@@ -83,6 +70,34 @@
                                 </td>
                             </tr>
                         @endforeach
+                        @elseif(Str::length(Auth::guard('user')->user())>0)
+                        @foreach ($list_notulen as $notulen)
+                        <tr>
+                            <td>{{ date('d-m-Y',strtotime($notulen->tanggal )) }}</td>
+                            <td>{{ $notulen->perusahaan->klien->nama_klien . " - " . $notulen->perusahaan->Perusahaan->nama_perusahaan }}</td>
+                                <td>{{ $notulen->judul_meeting }}</td>
+                                <td>{{ $notulen->user->name }}</td>
+                            <td>
+                                <button class="btn btn-info" onclick="window.location.href='{{ url('/notulen/'.$notulen->id) }}'">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                                <button class="btn btn-warning" onclick="window.location.href='{{ url('/notulen/'.$notulen->id.'/edit') }}'">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                @if(Str::length(Auth::guard('user')->user())>0)
+                                <form action="{{ url('/notulen/'.$notulen->id) }}" method="POST" class="d-inline">
+                                    @method('delete')
+                                    @csrf
+                                    <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                    {{-- <input type="hidden" name="id" value="{{ $notulen->id }}"/> --}}
+                                </form>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                        @endif
                     </table>
                    
                 </div>

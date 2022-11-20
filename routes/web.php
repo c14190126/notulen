@@ -29,7 +29,9 @@ Route::post('/register', [RegisterController::class, 'store']);
 
 Route::get('/', [NotulenController::class, 'index'])->middleware('auth:user,klien');
 Route::get('/list-notulen-acc', [NotulenController::class, 'indexacc'])->middleware('auth:user,klien');
+Route::get('/list-notulen-draft', [NotulenController::class, 'indexdraft'])->middleware('auth:user');
 Route::post('/create-notulen', [NotulenController::class, 'store']);
+Route::post('/save-as-draft', [NotulenController::class, 'savedraft']);
 Route::post('/get-url', [NotulenController::class, 'getURL']);
 Route::post('/get-user', [NotulenController::class, 'getUser']);
 Route::post('/get-revisi', [NotulenController::class, 'getRevisi']);
@@ -59,6 +61,7 @@ Route::post('/assign-perusahaan', [PerusahaanController::class, 'storedetail']);
 Route::post('/edit-perusahaan/{perusahaan:id}', [PerusahaanController::class, 'update']);
 Route::delete('/perusahaan/{perusahaan:id}', [PerusahaanController::class, 'destroy']);
 Route::put('/perusahaan-edit/{perusahaan:id}', [PerusahaanController::class, 'edit']);
+Route::get('/daftar-klien-perusahaan/{perusahaan:id}', [PerusahaanController::class, 'indexklien'])->middleware('auth:user');
 
 Route::get('/add-user', [UserController::class, 'indexadd'])->middleware('auth:user');
 Route::get('/daftar-user', [UserController::class, 'indexdaftar'])->middleware('auth:user');

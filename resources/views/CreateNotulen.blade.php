@@ -188,7 +188,7 @@
                                     <label for="text" style="color: black; font-weight: bold;">Tanda Tangan Deus</label>
                                     <div id="signature-pad-2" class="jay-signature-pad">
                                         <div class="jay-signature-pad--body">
-                                            <canvas id="jay-signature-pad-2" width=300 height=200 style="margin: 0px; padding: 0px; border: none; height: 200px; width: 300px; touch-action: none; background-color: rgb(247, 248, 248);"></canvas>
+                                            <canvas id="jay-signature-pad-2" width=300 height=200 style="margin: 0px; padding: 0px; border: none; height: 200px; width: 300px; touch-action: none; background-color: rgb(247, 248, 248); border:1 solid-black"></canvas>
                                         </div>
                                         <div>
                                             <button type="button" class="btn btn-danger" data-action="clear">Clear</button>
@@ -197,6 +197,7 @@
                                 </div>
                             </div>
                             <button id="tombol" type="button" class="btn btn-success">Save</button>
+                            <button type="submit" class="btn btn-success" name="action" value="draft">Save As Draft</button>
                         </div>
 
                         <div class="form-group" id="data_url">
@@ -207,6 +208,7 @@
                         </div>
                         {{-- <button type="submit" class="btn" style="background-color: #FECF5B; color: black;">Submit</button> --}}
                     </form>
+                    
                 </div>
             </div>
         </div>
@@ -404,7 +406,7 @@
                         if (signaturePad2.isEmpty()) {
                         }
                         else {
-                            $('#data_url_2').html('<input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan_deus" required autofocus value="'+result.deus+'"/><button type="submit" class="btn" style="background-color: #FECF5B; color: black;">Submit</button>');
+                            $('#data_url_2').html('<input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan_deus" required autofocus value="'+result.deus+'"/><button type="submit" name="action" value="submit" class="btn" style="background-color: #FECF5B; color: black;">Submit</button>');
                         }
                     }
                 });

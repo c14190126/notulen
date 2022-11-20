@@ -26,6 +26,15 @@ class PerusahaanController extends Controller
             ]);
         }
     }
+    public function indexklien($id)
+    {
+        if(Auth::guard('user')->check()) {
+            return view('Klien.ListKlienPerusahaan', [
+                "title" => "Daftar Perusahaan",
+                "list_perusahaan" => detail_klien::where('deleted', NULL)->where('perusahaan_id',$id)->get()
+            ]);
+        }
+    }
     public function indexAdd()
     {
         if(Auth::guard('user')->check()) {

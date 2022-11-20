@@ -19,7 +19,7 @@
                             Back
                         </button>
                         @else
-                        <button onclick="window.location.href='{{ url('/') }}'" type="button" class="btn btn-success">
+                        <button onclick="history.back()" type="button" class="btn btn-success">
                             Back
                         </button>
                         @endisset

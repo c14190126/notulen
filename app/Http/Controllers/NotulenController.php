@@ -35,26 +35,16 @@ class NotulenController extends Controller
             
             return view('ListNotulen', [
                 "title" => "Daftar Notulen",
-                "list_notulen" => notulen::latest()->whereIn('id', $user_akses)->orwhere('private', 0)->whereNull('tanda_tangan')->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+                "list_notulen" => notulen::latest()->whereIn('id', $user_akses)->orwhere('private', 0)->whereNull('tanda_tangan')->whereNull('draft')->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
                 "last_edit" => NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'),'notulen_id')->get()
             ]);
         }
         else{
-            // $klien_akses = detail_klien::where('detail_kliens.klien_id', Auth::guard('klien')->id())->get('detail_kliens.perusahaan_id');
             $daftar_perusahaan = detail_klien::join('kliens', 'kliens.id', '=', 'detail_kliens.klien_id')->where('kliens.id', Auth::guard('klien')->id())->get('detail_kliens.perusahaan_id');
-            // $daftar_notulen = notulen::join('detail_kliens', 'notulens.perusahaan_id', '=', 'detail_kliens.id')->join('users','notulens.user_id','=','users.id')->join('kliens','detail_kliens.klien_id','=','kliens.id')->join('perusahaans','detail_kliens.perusahaan_id','=','perusahaans.id')->whereIn('detail_kliens.perusahaan_id', $daftar_perusahaan)->get();
-            // $list_notulen = DB::table('notulens as n')
-            //            ->join('detail_kliens as d', 'd.perusahaan_id', '=', 'n.id')
-            //            ->join('users as u','n.user_id','=','u.id')
-            //            ->join('perusahaans as p','p.id','=','d.perusahaan_id')
-            //            ->join('kliens as k','k.id','d.klien_id')
-            //            ->wherein('d.perusahaan_id',$klien_akses)
-            //            ->select('n.*','u.name','p.nama_perusahaan','k.nama_klien')->distinct()
-            //            ->get();
-            // dd($daftar_notulen);
+           
             return view('ListNotulen', [
                 "title" => "Daftar Notulen",
-                "list_notulen" => notulen::join('detail_kliens', 'notulens.perusahaan_id', '=', 'detail_kliens.id')->join('users','notulens.user_id','=','users.id')->join('kliens','detail_kliens.klien_id','=','kliens.id')->join('perusahaans','detail_kliens.perusahaan_id','=','perusahaans.id')->whereIn('detail_kliens.perusahaan_id', $daftar_perusahaan)->select('notulens.*', 'kliens.nama_klien', 'perusahaans.nama_perusahaan', 'users.name')->get(),
+                "list_notulen" => notulen::join('detail_kliens', 'notulens.perusahaan_id', '=', 'detail_kliens.id')->join('users','notulens.user_id','=','users.id')->join('kliens','detail_kliens.klien_id','=','kliens.id')->join('perusahaans','detail_kliens.perusahaan_id','=','perusahaans.id')->where('draft',null)->whereIn('detail_kliens.perusahaan_id', $daftar_perusahaan)->wherenull('tanda_tangan')->select('notulens.*', 'kliens.nama_klien', 'perusahaans.nama_perusahaan', 'users.name')->get(),
                 "last_edit" => NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'),'notulen_id')->get()
             ]);
             // if($user != NULL) {
@@ -78,10 +68,10 @@ class NotulenController extends Controller
             ]);
         }
         else{
-            $klien_akses = detail_klien::where('detail_kliens.klien_id', Auth::guard('klien')->id())->get('detail_kliens.perusahaan_id');
+            $daftar_perusahaan = detail_klien::join('kliens', 'kliens.id', '=', 'detail_kliens.klien_id')->where('kliens.id', Auth::guard('klien')->id())->get('detail_kliens.perusahaan_id');
             return view('ListNotulenAcc', [
                 "title" => "Daftar Notulen Acc",
-                "list_notulen" => notulen::latest()->join('detail_kliens','detail_kliens.id','=','notulens.perusahaan_id')->whereIn('detail_kliens.perusahaan_id', $klien_akses)->whereNotNull('tanda_tangan')->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+                "list_notulen" => notulen::join('detail_kliens', 'notulens.perusahaan_id', '=', 'detail_kliens.id')->join('users','notulens.user_id','=','users.id')->join('kliens','detail_kliens.klien_id','=','kliens.id')->join('perusahaans','detail_kliens.perusahaan_id','=','perusahaans.id')->where('draft',null)->whereIn('detail_kliens.perusahaan_id', $daftar_perusahaan)->whereNotNull('tanda_tangan')->select('notulens.*', 'kliens.nama_klien', 'perusahaans.nama_perusahaan', 'users.name')->get(),
                 "last_edit" => NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'),'notulen_id')->get()
 
             ]);
@@ -89,6 +79,24 @@ class NotulenController extends Controller
        
     }
 
+    public function indexdraft()
+    {
+        if(Auth::guard('user')->check()) {
+            $user_akses = user_akses::where('akses_user', Auth::id())->get('notulen_id');
+            // dd($list_notulen);
+            // $last_edit = NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'), 'notulen_id', 'created_at')->get();
+
+            // dd($last_edit);
+            
+            return view('ListDraftNotulen', [
+                "title" => "Daftar Draft Notulen",
+                "list_notulen" => notulen::latest()->whereNotNull('draft')->orwhere('private', 0)->whereIn('id', $user_akses)->filter(request(['search', 'klien']))->paginate(10)->withQueryString(),
+                "last_edit" => NotesNotulen::groupBy('notulen_id')->select(DB::raw('MAX(created_at) as max'),'notulen_id')->get()
+            ]);
+        }
+
+       
+    }
 
     public function indexAdd()
     {
@@ -100,7 +108,7 @@ class NotulenController extends Controller
 
     public function send_wa(Request $request)
     {
-        $notulen = notulen::join('perusahaans as p', 'notulens.perusahaan_id', '=', 'p.id')->join('kliens as k', 'p.klien_id','k.id')->where('notulens.id', $request->id_notulen)->select('notulens.*', 'p.klien_id', 'k.nama_klien', 'k.email')->first();
+        $notulen = notulen::join('detail_kliens as p', 'notulens.perusahaan_id', '=', 'p.id')->join('kliens as k', 'p.klien_id','k.id')->where('notulens.id', $request->id_notulen)->select('notulens.*', 'p.klien_id', 'k.nama_klien', 'k.email')->first();
         $tanggal = Carbon::createFromFormat('Y-m-d', $notulen->tanggal)->format('d F Y');
         $jam_mulai = Carbon::createFromFormat('H:i:s', $notulen->jam_mulai)->format('H:i');
         $jam_selesai = Carbon::createFromFormat('H:i:s', $notulen->jam_selesai)->format('H:i');
@@ -127,40 +135,94 @@ class NotulenController extends Controller
      */
     public function store(StorenotulenRequest $request)
     {
-        // dd($request);
-        if($request->private == 'on') {
-            $count_akses_user = count($request->input('akses_user'));
-            $validatedData = $request->validate([
-                'user_id' => 'required',
-                'perusahaan_id' => 'required',
-                'tanggal' => 'required',
-                'jam_mulai' => 'required',
-                'jam_selesai' => 'required',
-                'judul_meeting' => 'required|max:255|',
-                'isi_notulen' => 'required',
-                'tanda_tangan' => '',
-                'private' => '',
-                'tanda_tangan_deus' => 'required'
-            ]);
-            $validatedData['private']=1;
-        }
-        else
+        switch($request->action)
         {
-            $validatedData = $request->validate([
-                'user_id' => 'required',
-                'perusahaan_id' => 'required',
-                'tanggal' => 'required',
-                'jam_mulai' => 'required',
-                'jam_selesai' => 'required',
-                'judul_meeting' => 'required|max:255|',
-                'isi_notulen' => 'required',
-                'tanda_tangan' => '',
-                'private' => '',
-                'tanda_tangan_deus' => 'required'
-            ]);
-        }
+            case 'submit':
 
-        notulen::create($validatedData);
+                if($request->private == 'on') {
+                    $count_akses_user = count($request->input('akses_user'));
+                    $validatedData = $request->validate([
+                        'user_id' => 'required',
+                        'perusahaan_id' => 'required',
+                        'tanggal' => 'required',
+                        'jam_mulai' => 'required',
+                        'jam_selesai' => 'required',
+                        'judul_meeting' => 'required|max:255|',
+                        'isi_notulen' => 'required',
+                        'tanda_tangan' => '',
+                        'private' => '',
+                        'tanda_tangan_deus' => 'required'
+                    ]);
+                    $validatedData['private']=1;
+                    $validatedData['draft']=null;
+
+                }
+                else
+                {
+                    $validatedData = $request->validate([
+                        'user_id' => 'required',
+                        'perusahaan_id' => 'required',
+                        'tanggal' => 'required',
+                        'jam_mulai' => 'required',
+                        'jam_selesai' => 'required',
+                        'judul_meeting' => 'required|max:255|',
+                        'isi_notulen' => 'required',
+                        'tanda_tangan' => '',
+                        'private' => '',
+                        'tanda_tangan_deus' => 'required'
+                    ]);
+                    $validatedData['draft']=null;
+
+                }
+        
+                notulen::create($validatedData);
+                break;
+
+                case 'draft':
+
+                    if($request->private == 'on') {
+                        $count_akses_user = count($request->input('akses_user'));
+                        $validatedData = $request->validate([
+                            'user_id' => 'required',
+                            'perusahaan_id' => 'required',
+                            'tanggal' => 'required',
+                            'jam_mulai' => 'required',
+                            'jam_selesai' => 'required',
+                            'judul_meeting' => 'required|max:255|',
+                            'isi_notulen' => 'required',
+                            'tanda_tangan' => '',
+                            'private' => '',
+                            'tanda_tangan_deus' => '',
+                            'draft'=>''
+                        ]);
+                        $validatedData['private']=1;
+                        $validatedData['draft']=1;
+
+                    }
+                    else
+                    {
+                        $validatedData = $request->validate([
+                            'user_id' => 'required',
+                            'perusahaan_id' => 'required',
+                            'tanggal' => 'required',
+                            'jam_mulai' => 'required',
+                            'jam_selesai' => 'required',
+                            'judul_meeting' => 'required|max:255|',
+                            'isi_notulen' => 'required',
+                            'tanda_tangan' => '',
+                            'private' => '',
+                            'tanda_tangan_deus' => '',
+                            'draft'=>''
+                        ]);
+                        $validatedData['draft']=1;
+
+                    }
+            
+                    notulen::create($validatedData);
+                    break;
+
+        }
+        
 
         if($request->private == 'on') {
             $notulen= notulen::where('judul_meeting', $request->judul_meeting)->where('tanda_tangan_deus', $request->tanda_tangan_deus)->first();

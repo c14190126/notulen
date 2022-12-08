@@ -166,6 +166,7 @@
                         </form>
                         <form action="{{ url('/notulen/'.$notulen->id.'/edit/add-catatan') }}" method="post">
                             @csrf
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                             @isset($notulen->tanda_tangan)
                             <div class="form-group">
                                 <div class="row">
@@ -176,12 +177,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label for="text" style="color: black; font-weight: bold;">Isi Catatan</label>
-                                        <input id="isi_notulen" type="hidden" name="isi_notulen" value="{{ old('isi_notulen') }}">
-                                        <trix-editor class="trix-content input="isi_notulen"></trix-editor>                                    </div>
-                                </div>
+                                <label for="text" style="color: black; font-weight: bold;">Isi Catatan</label>
+                                <input id="isi_catatan" type="hidden" name="isi_catatan" value="{{ old('isi_catatan') }}">
+                                <trix-editor input="isi_catatan"></trix-editor>
                             </div>
                             <div class="form-group">
                                 <div class="row">
@@ -254,24 +252,7 @@
                                           Tolak
                                         </label>
                                       </div>
-                                      <div class="form-group" id="catatan">
-                                        
-                                    </div>
-                                    {{-- <div class="form-group">
-                                        @isset($notulen->revisi_notulen)
-                                            <label for="text" style="color: black; font-weight: bold;">Edited By</label>
-                                            <p>{!! $edited->name !!}</p>
-                                        @endisset
-                                    </div> --}}
-                                    {{-- <div class="form-group">
-                                        @isset($notulen->catatan_klien)
-                                            <label for="text" style="color: black; font-weight: bold;">Catatan Klien</label>
-                                            <p>{!! $notulen->catatan_klien !!}</p>
-                                        @endisset
-                                    </div> --}}
-                                    <div class="form-group" id="">
-                                        
-                                    </div>
+                                    
                                     <div class="form-group">
                                         <div class="row" id="tandatangan">
                                             <div class="col-sm-6">

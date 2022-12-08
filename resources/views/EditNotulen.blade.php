@@ -179,8 +179,8 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label for="text" style="color: black; font-weight: bold;">Isi Catatan</label>
-                                        <input id="isi_notulen" type="hidden" name="isi_notulen" value="{{ old('isi_notulen') }}">
-                                        <trix-editor class="trix-content input="isi_notulen"></trix-editor>                                    </div>
+                                        <input id="isi_catatan" type="hidden" name="isi_catatan" value="{{ old('isi_catatan') }}">
+                                        <trix-editor class="trix-content" input="isi_catatan"></trix-editor>                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">

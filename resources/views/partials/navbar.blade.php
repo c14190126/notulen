@@ -83,7 +83,7 @@
             @endcan
             @endif
             @if(Str::length(Auth::guard('klien')->user())>0)
-            <h4 class="nama" style="color: white">{{ auth()->user()->nama_klien }}</h4>
+            <h4 class="nama" style="color: white">{{ auth('klien')->user()->nama_klien }}</h4>
 
             <li class="nav-item {{ ($title === "Daftar Notulen") ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('/') }}">List Notulen</a>

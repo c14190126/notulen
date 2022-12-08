@@ -127,13 +127,14 @@
                             @foreach ($catatan as $c)
                                 <tr>
                                     <td>{{ $c->tanggal_catatan }}</td>
-                                    <td>{{ $c->isi_catatan }}</td>
+                                    <td>{!! $c->isi_catatan !!}</td>
                                     <td>{{ $c->user->name }}</td>
                                 </tr>
                             @endforeach
                         </table>
                     </div>
                     @endif
+                    @if(is_null($notulen->draft))
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-2">
@@ -158,6 +159,7 @@
                             @endif
                         </div>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>

@@ -401,6 +401,46 @@ class NotulenController extends Controller
         }
     }
 
+    public function editdraft(notulen $notulen)
+    {
+        if (Auth::guard("user")->check())
+        {
+            if ($notulen->private == 0)
+            {
+                return view('EditDraftNotulen', [
+                    "title" => "Edit Notulen",
+                    "notulen" => $notulen,
+                    "perusahaan" => DB::table('detail_kliens as d')
+                                ->join('notulens as n', 'd.id', '=', 'n.perusahaan_id')
+                                ->join('perusahaans as p','p.id','=','d.perusahaan_id' )
+                                ->join('kliens as k','k.id','=','d.klien_id' )
+                                ->where('n.id',$notulen->id)
+                                ->select('d.perusahaan_id','p.nama_perusahaan','k.nama_klien')
+                                ->first()
+                ]);
+            }
+            else
+            {
+                $akses_notulen = user_akses::where('notulen_id', $notulen->id)->where('akses_user', Auth::id())->count();
+                if ($akses_notulen != 0)
+                {
+                    return view('EditDraftNotulen', [
+                        "title" => "Edit Notulen",
+                        "notulen" => $notulen,
+                        "edited" => DB::table('users as u')
+                                    ->join('notulens as n', 'u.id', '=', 'n.edited_by')
+                                    ->where('n.id',$notulen->id)
+                                    ->select('u.name')
+                                    ->first()
+                    ]);
+                }
+                else {
+                    abort(403);
+                }
+            }
+        }
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -414,24 +454,22 @@ class NotulenController extends Controller
         // dd($notulen->jumlah_revisi+1);
         if(Auth::guard('user')->check())
         {
-            // if(is_null($request->catatan)) {
+            if(is_null($request->tanda_tangan)) {
                 notulen::where('id', $notulen->id)
-                       ->update(['tanda_tangan' => $request->tanda_tangan,
+                       ->update(['tanda_tangan_deus' => $request->tanda_tangan_deus,
                             'isi_notulen' => $request->isi_notulen,
                             'judul_meeting'=>$request->judul_meeting,
+                            'draft'=>null,  
                              'edited_by' => Auth::id()
                     ]);
-            // }
-            // else {
-            //     notulen::where('id', $notulen->id)
-            //            ->update(['tanda_tangan' => $request->tanda_tangan,
-            //                      'isi_notulen' => $request->isi_notulen,
-            //                      'edited_by' => $request->edited_by,
-            //                      'catatan'=>$request->catatan,
-            //                     //  'jumlah_revisi' => $notulen->jumlah_revisi+1,
-            //                     //  'tanggal_revisi' => Carbon::today()
-            //                     ]);
-            // }
+            }
+            else {
+                notulen::where('id', $notulen->id)
+                       ->update(['tanda_tangan' => $request->tanda_tangan,
+                                 'isi_notulen' => $request->isi_notulen,
+                                 'edited_by' => Auth::id(),
+                                ]);
+            }
             
         }
         elseif(Auth::guard('klien')->check())
@@ -452,7 +490,53 @@ class NotulenController extends Controller
          }
         return redirect('/')->with('success', 'Notulen telah diedit!');
     }
-
+    public function updatedraft(UpdatenotulenRequest $request, notulen $notulen)
+    {
+        // dd($request);
+        // dd($notulen->jumlah_revisi+1);
+        if(Auth::guard('user')->check())
+        {
+            switch($request->action)
+            {
+                case 'draft':
+                    if(is_null($request->tanda_tangan_deus)) {
+                        notulen::where('id', $notulen->id)
+                               ->update(['tanda_tangan_deus' => $request->tanda_tangan_deus,
+                                    'isi_notulen' => $request->isi_notulen,
+                                    'judul_meeting'=>$request->judul_meeting,
+                                    'jam_mulai'=>$request->jam_mulai,
+                                    'jam_selesai'=>$request->jam_selesai,
+                                    'tanggal'=>$request->tanggal,
+                                    'draft'=>'1',  
+                                     'edited_by' => Auth::id()
+                            ]);
+                    }
+                    else {
+                        notulen::where('id', $notulen->id)
+                               ->update(['tanda_tangan' => $request->tanda_tangan,
+                                         'isi_notulen' => $request->isi_notulen,
+                                         'edited_by' => Auth::id(),
+                                        ]);
+                    }
+                    break;
+                case 'submit':
+                        notulen::where('id', $notulen->id)
+                               ->update(['tanda_tangan_deus' => $request->tanda_tangan_deus,
+                                    'isi_notulen' => $request->isi_notulen,
+                                    'judul_meeting'=>$request->judul_meeting,
+                                    'jam_mulai'=>$request->jam_mulai,
+                                    'jam_selesai'=>$request->jam_selesai,
+                                    'tanggal'=>$request->tanggal,
+                                    'draft'=>null,  
+                                     'edited_by' => Auth::id()
+                            ]);
+                    break;
+            }
+            
+        }
+       
+        return redirect('/')->with('success', 'Notulen telah diedit!');
+    }
     /**
      * Remove the specified resource from storage.
      *

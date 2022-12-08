@@ -127,7 +127,6 @@
                                                 <div class="signature-pad--actions txt-center">
                                                     <div>
                                                         <button type="button" class="btn btn-danger" data-action="clear">Clear</button>
-                                                        <button id="tombol" type="button" class="btn btn-success">Save</button>
                                                     </div><br/>
                                                 </div>
                                             </div>
@@ -136,12 +135,31 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <label for="text" style="color: black; font-weight: bold;">Tanda Tangan Deus</label>
-                                        <br><img src="{{ $notulen->tanda_tangan_deus }}" style="height: 70%"/>
+                                        @isset($notulen->draft)
+                                    <div id="signature-pad-2" class="jay-signature-pad">
+                                        <div class="jay-signature-pad--body">
+                                            <canvas id="jay-signature-pad" width=300 height=200 style="margin: 0px; padding: 0px; border: none; height: 200px; width: 300px; touch-action: none; background-color: rgb(247, 248, 248); border:1 solid-black"></canvas>
+                                        </div>
+                                        <div>
+                                            <button type="button" class="btn btn-danger" data-action="clear">Clear</button>
+                                        </div><br/>
                                     </div>
+                                    @else
+                                    <br><img src="{{ $notulen->tanda_tangan_deus }}" style="height: 70%"/>
+                                    @endisset
                                 </div>
                             </div>
+                            @isset($notulen->draft)
+                            <button id="tombol" type="button" class="btn btn-success">Save</button>
+                            @else
+                            <button id="tombol_klien" type="button" class="btn btn-success">Save</button>
+                            @endisset
+                        </div>
                                     
                             <div class="form-group" id="data_url">
+                                <input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan"  autofocus value="{{ old('tanda_tangan') }}"/>
+                            </div>
+                            <div class="form-group" id="data_url2">
                                 <input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan"  autofocus value="{{ old('tanda_tangan') }}"/>
                             </div>
                             {{-- <br><button type="submit" class="btn" style="background-color: #FECF5B; color: black;">Submit</button> --}}
@@ -266,7 +284,7 @@
                                                         <div class="signature-pad--actions txt-center">
                                                             <div>
                                                                 <button type="button" class="btn btn-danger" data-action="clear">Clear</button>
-                                                                <button id="tombol" type="button" class="btn btn-success">Save</button>
+                                                                <button id="tombol_klien" type="button" class="btn btn-success">Save</button>
                                                             </div><br/>
                                                         </div>
                                                     </div>
@@ -467,12 +485,40 @@
             //     }
             // });
         </script>
-       
+
+     <script>
+        $('#tombol_klien').click(function () {
+            var tanda_tangan = signaturePad.toDataURL("image/jpeg");
+            $("#data_url").html('');
+            // $("#data_url_2").html('');
+            // console.log(tanda_tangan);
+            // alert(tanda_tangan);
+            $.ajax({
+                url: "{{url('/get-url')}}",
+                type: 'POST',
+                data: {
+                        tanda_tangan:tanda_tangan,
+                        _token:'{{ csrf_token() }}'
+                },
+                dataType: 'json',
+                success: function (result) {                  
+                    if(signaturePad.isEmpty())
+                    {
+                        $('#data_url').html('<input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan" required autofocus value=""/><button type="submit" class="btn" style="background-color: #FECF5B; color: black;">Submit</button>');
+
+                    }
+                    else{
+                        $('#data_url').html('<input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan" required autofocus value="'+result.klien+'"/><button type="submit" class="btn" style="background-color: #FECF5B; color: black;">Submit</button>');
+                    }
+                }
+            });
+        });
+    </script>   
 
         <script>
             $('#tombol').click(function () {
                 var tanda_tangan = signaturePad.toDataURL("image/jpeg");
-                // var tanda_tangan_deus = signaturePad2.toDataURL("image/jpeg");
+                var tanda_tangan_deus = signaturePad2.toDataURL("image/jpeg");
                 $("#data_url").html('');
                 // $("#data_url_2").html('');
                 // console.log(tanda_tangan);
@@ -482,17 +528,23 @@
                     type: 'POST',
                     data: {
                             tanda_tangan:tanda_tangan,
-                            // tanda_tangan_deus:tanda_tangan_deus,
+                            tanda_tangan_deus:tanda_tangan_deus,
                             _token:'{{ csrf_token() }}'
                     },
                     dataType: 'json',
                     success: function (result) {
-                        if(signaturePad.isEmpty()) {
-                            $('#data_url').html('<input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan" required autofocus value=""/><button type="submit" class="btn" style="background-color: #FECF5B; color: black;">Submit</button>');
-                        }
+                        if(signaturePad.isEmpty() && signaturePad2.isEmpty()==false) {
+                            $('#data_url').html('<input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan" required autofocus value=""/>');
+                            $('#data_url2').html('<input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan_deus" required autofocus value="'+result.deus+'"/><button type="submit" class="btn" style="background-color: #FECF5B; color: black;">Submit</button>');
 
-                        else {
-                            $('#data_url').html('<input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan" required autofocus value="'+result.klien+'"/><button type="submit" class="btn" style="background-color: #FECF5B; color: black;">Submit</button>');
+                        }
+                        else if(signaturePad.isEmpty())
+                        {
+                            $('#data_url').html('<input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan" required autofocus value=""/><button type="submit" class="btn" style="background-color: #FECF5B; color: black;">Submit</button>');
+
+                        }
+                        else{
+                            $('#data_url').html('<input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan" required autofocus value="'+result.klien+'"/>');
                         }
                     }
                 });

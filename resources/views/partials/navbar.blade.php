@@ -3,13 +3,16 @@
     <button type="button" id="sidebarCollapse" class="btn" style="background-color: #FECF5B">
         <i class="fa fa-bars"></i>
         <span class="sr-only">Toggle Menu</span>
+
     </button>
     </div>
     <div class="p-4 pt-5">
         <img src="{{ asset('/images/Logo-Deus.jpg') }}" width="200" height="100" style="object-fit: scale-down;">
+        
         <br>
         <ul class="list-unstyled components mb-5">
             @if(Str::length(Auth::guard('user')->user())>0)
+            <h4 style="color: white" class="nama">{{ auth()->user()->name }}</h4>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#notulen" aria-expanded="false" aria-controls="notulen">
                 <span class="menu-title">Notulen</span>
@@ -20,14 +23,14 @@
                         <li class="nav-item {{ ($title === "Create Notulen") ? 'active' : '' }}">
                             <a class="nav-link" href="{{ url('/add-notulen') }}">Create Notulen</a>
                         </li>
+                        <li class="nav-item {{ ($title === "Daftar Notulen Acc") ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ url('/list-notulen-draft') }}">List Draft Notulen</a>
+                        </li>
                         <li class="nav-item {{ ($title === "Daftar Notulen") ? 'active' : '' }}">
                             <a class="nav-link" href="{{ url('/') }}">List Notulen</a>
                         </li>
                         <li class="nav-item {{ ($title === "Daftar Notulen Acc") ? 'active' : '' }}">
                             <a class="nav-link" href="{{ url('/list-notulen-acc') }}">List Notulen Acc</a>
-                        </li>
-                        <li class="nav-item {{ ($title === "Daftar Notulen Acc") ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ url('/list-notulen-draft') }}">List Draft Notulen</a>
                         </li>
                         
                     </ul>
@@ -80,6 +83,8 @@
             @endcan
             @endif
             @if(Str::length(Auth::guard('klien')->user())>0)
+            <h4 class="nama" style="color: white">{{ auth()->user()->nama_klien }}</h4>
+
             <li class="nav-item {{ ($title === "Daftar Notulen") ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('/') }}">List Notulen</a>
             </li>

@@ -32,13 +32,16 @@ Route::get('/list-notulen-acc', [NotulenController::class, 'indexacc'])->middlew
 Route::get('/list-notulen-draft', [NotulenController::class, 'indexdraft'])->middleware('auth:user');
 Route::post('/create-notulen', [NotulenController::class, 'store']);
 Route::post('/save-as-draft', [NotulenController::class, 'savedraft']);
+Route::get('/edit-draft', [NotulenController::class, 'editdraft']);
 Route::post('/get-url', [NotulenController::class, 'getURL']);
 Route::post('/get-user', [NotulenController::class, 'getUser']);
 Route::post('/get-revisi', [NotulenController::class, 'getRevisi']);
 Route::get('/add-notulen', [NotulenController::class, 'indexAdd'])->middleware('auth:user');
 Route::post('/send-wa', [NotulenController::class, 'send_wa'])->middleware('auth:user');
 
-Route::get('/notulen/{id}', [NotulenController::class, 'show']);
+Route::get('/notulen/{notulen:id}', [NotulenController::class, 'show']);
+Route::get('/edit-draft/{notulen:id}', [NotulenController::class, 'editdraft']);
+Route::post('/edit-draft/{notulen:id}', [NotulenController::class, 'updatedraft']);
 Route::delete('/notulen/{notulen:id}', [NotulenController::class, 'destroy']);
 Route::get ('/notulen/{notulen:id}/edit', [NotulenController::class, 'edit'])->middleware('auth:user,klien');
 Route::put('/edit-notulen/{notulen:id}', [NotulenController::class, 'update']);

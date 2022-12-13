@@ -455,13 +455,24 @@ class NotulenController extends Controller
         if(Auth::guard('user')->check())
         {
             if(is_null($request->tanda_tangan)) {
-                notulen::where('id', $notulen->id)
-                       ->update(['tanda_tangan_deus' => $request->tanda_tangan_deus,
+                if(is_null($notulen->draft))
+                {
+                    notulen::where('id', $notulen->id)
+                       ->update(['tanda_tangan_deus' => $notulen->tanda_tangan_deus,
                             'isi_notulen' => $request->isi_notulen,
                             'judul_meeting'=>$request->judul_meeting,
-                            'draft'=>null,  
-                             'edited_by' => Auth::id()
+                            'edited_by' => Auth::id()
                     ]);
+                }
+                else{
+                    notulen::where('id', $notulen->id)
+                           ->update(['tanda_tangan_deus' => $request->tanda_tangan_deus,
+                                'isi_notulen' => $request->isi_notulen,
+                                'judul_meeting'=>$request->judul_meeting,
+                                'draft'=>null,  
+                                'edited_by' => Auth::id()
+                        ]);
+                }
             }
             else {
                 notulen::where('id', $notulen->id)
@@ -476,7 +487,7 @@ class NotulenController extends Controller
         {
             if(is_null($request->_klien)) {
                 notulen::where('id', $notulen->id)
-                       ->update(['tanda_tangan' => $request->tanda_tangan,
+                       ->update(['tanda_tangan' => null,
                        'catatan_klien' => $request->catatan_klien,
                     //    'tanggal_revisi' => NULL,
                     ]);

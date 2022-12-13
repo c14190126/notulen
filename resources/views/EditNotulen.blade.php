@@ -159,9 +159,9 @@
                             <div class="form-group" id="data_url">
                                 <input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan"  autofocus value="{{ old('tanda_tangan') }}"/>
                             </div>
-                            <div class="form-group" id="data_url2">
-                                <input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan"  autofocus value="{{ old('tanda_tangan') }}"/>
-                            </div>
+                                {{-- <div class="form-group" id="data_url2">
+                                    <input type="hidden" class="form-control" style="width:30%;" name="tanda_tangan"  autofocus value="{{ old('tanda_tangan') }}"/>
+                                </div> --}}
                             {{-- <br><button type="submit" class="btn" style="background-color: #FECF5B; color: black;">Submit</button> --}}
                         </form>
                         <form action="{{ url('/notulen/'.$notulen->id.'/edit/add-catatan') }}" method="post">
